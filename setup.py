@@ -2,13 +2,13 @@
 from setuptools import setup
 
 setup(
-    name = 'myscript',
+    name = 'arxiv-script',
     version = '0.1',
-    py_modules = ['myscript'],
+    py_modules = ['arxiv-script'],
     install_requires = ['Click',
     ],
     entry_points='''
         [console_scripts]
-        myscript = myscript:cli
+        arxiv-script = arxiv-script:cli
     ''',
 )
