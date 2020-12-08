@@ -3,26 +3,24 @@
 Simple command line tool to view and download arxiv files directly from the terminal.
 
 ## FUNCTIONALITY
-show arxiv article, ask for download (and/or open file)
-arxiv ARXIV_NO
+show arxiv article, ask for download (slow delay) (and/or open file)
+arxiv get ARXIV_NO
+flags: --open (open after download)
 
-download arxiv article
-arxiv --d ARXIV_NO
+show article
+arxiv show ARXIV_NO
 
-download and open
-arxiv --do ARXIV_NO
+change directory where files are donwloaded to
+arxiv --dir 
 
-show arxiv article (needed?)
-arxiv -s ARXIV_NO
 
-change folder where files are downloaded to
-arxiv --cd 
-
-show options (mainly where files are donwloaded to)
-arxiv --o
 
 ## ADVANCED
-- add possibility to save different identifiers in different folders
+- get bibtex (--bib ?)
+- check with zentralblatt (equivalent for other disciplines?)
+- check recent/day submissions of a specific subject
+(- add possibility to save different identifiers in different folders)
+
 
 ## TODO
 - dir_control function: so far only macOS...

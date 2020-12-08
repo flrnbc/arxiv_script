@@ -2,18 +2,29 @@
 import retrieve
 import click
 
-@click.command()
-#@click.option('--ano', default=0))
-@click.argument('ano', type=str, default=0)
-def cli(ano):    
-    ''' Script to download arXiv articles. '''
-    while retrieve.check(ano) == False:
-        print('Too bad!')
-        ano = input("Please enter a valid arxiv identifier.")
-        ano = ano.zfill(9)
+@click.group()
+def cli():
+    """Script to download and show arXiv articles. Version 0.1."""
+
+@cli.command("get")
+@click.option("--dir")
+@click.argument("ax_id")
+def get_article(ax_id):
+    """Download article with arXiv identifier ax_id."""
+    while retrieve.check(ax_id) == False:
+        ano = str(input("Please enter a valid arxiv identifier (enter 'q' to quit)."))
+        if ax_id  == 'q':
+            break
     else: 
-        article = retrieve.arxiv(ano)
+        article = retrieve.arxiv(ax_id)
         print(article)
 
-#a_no = input('Give me a valid arxiv identifier.')
-#cli(a_no)
+@cli.command("show")
+@click.argument("ax_num")
+def show_article(ax_num):
+    pass
+
+ 
+
+
+
