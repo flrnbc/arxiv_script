@@ -3,8 +3,7 @@ from dir_control import control_dir
 import requests
 
 
-
-## article class 
+## article class
 # add some meta-data?
 
 class Article:
@@ -24,9 +23,5 @@ class Article:
         pdf_url = 'https://arxiv.org/pdf/{}.pdf'.format(self.aX_num)
         r_pdf = requests.get(pdf_url)
         # download file
-        open('{}/{}.pdf'.format(save_directory, file_name), 'wb').write(r_pdf.content)
-        return "File saved as \n {}/{}.pdf".format(save_directory, file_name)
-
-
-
-
+        open('{}/{}.pdf'.format(save_dir, file_name), 'wb').write(r_pdf.content)
+        return "File saved as \n {}/{}.pdf".format(save_dir, file_name)
