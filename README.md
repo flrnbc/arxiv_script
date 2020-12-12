@@ -1,6 +1,6 @@
-
 # ARXIV-SCRIPT
 Simple command line tool to view and download arxiv files directly from the terminal.
+
 
 ## FUNCTIONALITY
 show arxiv article, ask for download (slow delay) (and/or open file)
@@ -11,8 +11,7 @@ show article
 arxiv show ARXIV_NO
 
 change directory where files are donwloaded to
-arxiv --dir 
-
+arxiv --dir
 
 
 ## ADVANCED

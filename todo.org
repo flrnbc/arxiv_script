@@ -1,0 +1,11 @@
+* tests
+** TODO print directory where article was downloaded to
+** TODO what if no/false directory is given?
+
+* to add/change
+** DONE only one function (replace show with get but ask to download)
+   CLOSED: [2020-12-12 Sat 19:38]
+** TODO option to download in other directories (e.g. recognize different arXiv subjects)
+** TODO zblatt
+** TODO show recent, today in arxiv (how to browse?!?)
+** TODO option to open file directly?
