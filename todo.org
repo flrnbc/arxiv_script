@@ -5,7 +5,13 @@
 * to add/change
 ** DONE only one function (replace show with get but ask to download)
    CLOSED: [2020-12-12 Sat 19:38]
+** TODO flags for 'get':
+*** TODO --dir (set default dir)
+*** TODO -o (open file after download) (THINK ABOUT OPTION)
+*** TODO -d download directly
 ** TODO option to download in other directories (e.g. recognize different arXiv subjects)
 ** TODO zblatt
+** TODO bib
 ** TODO show recent, today in arxiv (how to browse?!?)
-** TODO option to open file directly?
+** TODO rename retrieve.py in axs.py (--> new install of script?)
+** TODO make it work for other OS (problem: file name...)

@@ -7,7 +7,6 @@ import os
 
 def arxiv(ax_id):
     ''' Ask for arXiv identifier and return corresponding Article class. '''
-
     # python 3 truncates leading zeros but these might occur in arxiv identifiers
     ax_id = str(ax_id).zfill(9)
     abs_url = 'https://arxiv.org/abs/{}'.format(ax_id)
@@ -45,31 +44,3 @@ def check(ax_id):
     r = requests.get(abs_url)
     # check status of request
     return r.status_code == requests.codes.ok
-
-
-def get(ax_id):
-    ''' Ask for arXiv identifier and show article.
-        Give option to download it.
-    '''
-    while check(ax_id) == False:
-        ax_id = str(input("Please enter a valid arXiv identifier (enter 'q' to quit)."))
-        if ax_id == 'q':
-            break
-    else:
-        article = arxiv(ax_id)
-        print(article.title)
-        dload = ""
-        while dload not in ["y", "n", "c"]:
-            dload = str(input("Do you want to download the article? \n [y]es \n [n]o \n [c]hange directory (temporarily)."))
-        else:
-            if dload == "y":
-                article.download()
-            elif dload == "n":
-                print("No download.")
-            elif dload == "c":
-                save_dir = ""
-                while os.path.exists(save_dir) == False:
-                    save_dir = str(input("Please enter a valid directory (absolute path). (press 'd' for default))"))
-                    if save_dir == 'd':
-                        save_dir = control_dir('read')
-                article.download(save_dir)
