@@ -6,7 +6,9 @@
 ** DONE only one function (replace show with get but ask to download)
    CLOSED: [2020-12-12 Sat 19:38]
 ** TODO flags for 'get':
-*** TODO --dir (set default dir); also show default directory in help
+*** DONE --dir (set default dir); also show default directory in help
+    CLOSED: [2020-12-19 Sat 22:00]
+    Note: instead introduced a set command.
 *** DONE get -dir (to download to specified directory)
     CLOSED: [2020-12-15 Tue 15:47]
 *** DONE -o (open file after download) (THINK ABOUT OPTION)
@@ -14,6 +16,11 @@
 *** DONE -a show abstract
     CLOSED: [2020-12-15 Tue 15:15]
 *** TODO -d download directly (REALLY NEEDED?)
+****
+*** TODO -bib get bib-entry
+**** TODO remove ax_id from title
+**** TODO curly braces around capital letters
+**** TODO how to deal with many authors?!?
 ** TODO make it work for other OS (problem: file name...)
 ** TODO option to download in other directories (e.g. recognize different arXiv subjects)
 ** TODO zblatt
