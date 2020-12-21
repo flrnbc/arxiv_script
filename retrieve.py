@@ -5,11 +5,20 @@ import os
 import re
 
 def get_year(ax_id):
-    """ Extra the year from an arXiv identifier (in format YYYY). """
-    modern_ax_id = re.compile(r'([0-9]{2})([0-9]{2}):([0-9]{5})')
+    """ Extract the year from an arXiv identifier (in format YYYY). """
+    modern_ax_id = re.compile(r'([0-9]{2})([0-9]{2}).([0-9]+)')
     search_modern = re.search(modern_ax_id, ax_id)
     if search_modern:
         year = '20' + search_modern[1]
+    else:
+        old_ax_id = re.compile(r'([a-zA-Z]+[-]?[a-zA-Z]+)/([0-9]{2})([0-9]+)')
+        search_old = re.search(old_ax_id, ax_id)
+        # get century right
+        if search_old[2][0] == "9":
+            year = '19' + search_old[2]
+        else:
+            year = '20' + search_old[2]
+    return year
 
 
 def arxiv(ax_id):
@@ -22,18 +31,15 @@ def arxiv(ax_id):
     # obtain a _structured_ document ("tree") of source of abs_url
     page_tree =  html.fromstring(src_abs.content)
 
-    # extract article data from page_tree (as lists)
-    title = page_tree.xpath('//title')[0]
-    all_authors = page_tree.xpath('//meta[@name="citation_author"]/@content')
-    full_abstract = page_tree.xpath('//meta[@property="og:description"]/@content')
+    # extract title and abstract from page tree
+    title = ' '.join(page_tree.xpath('//meta[@name="citation_title"]/@content'))
+    abstract = ' '.join(page_tree.xpath('//meta[@property="og:description"]/@content'))
 
-    # extract year and actual title name from 'title'
-    # TODO: explain construction of year more carefully!
-    title_name = title.text_content()
-    title_splitted = title_name.split()
-    title = ' '.join(title_splitted[1:])
+    # get main subject from page tree
+    main_subject = page_tree.xpath('//span [@class="primary-subject"]')[0].text_content()
 
     # create a convenient authors' name
+    all_authors = page_tree.xpath('//meta[@name="citation_author"]/@content')
     authors_list = [a.split(', ')[0] for a in all_authors[:3]]
     if len(all_authors) > 3:
         authors_name = authors_list[0] + ' et al'
@@ -43,11 +49,7 @@ def arxiv(ax_id):
     else:
         authors_name = authors_list[0]              # TODO: IMPROVE!?!?
 
-    # convert abstract into nicer string
-    full_abstract = page_tree.xpath('//meta[@property="og:description"]/@content')
-    abstract_text = ' '.join(full_abstract)
-
-    return article.Article(title = title_name, authors = authors_name, abstract = abstract_text, ax_id = ax_id, year = article_year)
+    return article.Article(title = title, authors = authors_name, abstract = abstract, ax_id = ax_id, year = article_year, main_subject = main_subject)
 
 
 def check(ax_id):
@@ -56,3 +58,20 @@ def check(ax_id):
     r = requests.get(abs_url)
     # check status of request
     return r.status_code == requests.codes.ok
+
+# short tests
+def test_get_year():
+    # print(get_year("hep-th/99032314"))
+    assert get_year("hep-th/99032314") == "1999"
+    assert get_year("mathGT/00112314") == "2000"
+    assert get_year("1010:12345") == "2010"
+    return "tests pass!"
+
+#print('1308.2198'.zfill(9))
+
+def test_arxiv():
+    print(arxiv('1308.2198'))
+    print(arxiv('hep-th/0002138'))
+
+#print(test_get_year())
+test_arxiv()

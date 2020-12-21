@@ -7,15 +7,16 @@ import time
 # add some meta-data?
 
 class Article:
-    def __init__(self, title, authors, abstract, ax_id, year):
+    def __init__(self, title, authors, abstract, ax_id, year, main_subject):
         self.title = title
         self.authors = authors
         self.abstract = abstract
         self.ax_id = ax_id
         self.year = year
+        self.main_subject = main_subject
 
     def __str__(self):
-        return f"Title:\n{self.title} \n\nAuthors:\n{self.authors}\n\nAbstract:\n{self.abstract} \n\narXiv identifier:\n{self.ax_id} \n\nYear: \n{self.year}"
+        return f"Title:\n{self.title} \n\nAuthors:\n{self.authors}\n\nAbstract:\n{self.abstract} \n\narXiv identifier:\n{self.ax_id} \n\nYear: \n{self.year} \n\nMain subject: \n{self.main_subject}"
 
     default_directory = load('data')['default directory']
     default_bib = load('data')['bib-file']

@@ -21,6 +21,8 @@
 **** TODO remove ax_id from title
 **** TODO curly braces around capital letters
 **** TODO how to deal with many authors?!?
+**** TODO also get the arxiv subject?
+**** TODO need also first names!
 ** TODO make it work for other OS (problem: file name...)
 ** TODO option to download in other directories (e.g. recognize different arXiv subjects)
 ** TODO zblatt

@@ -43,9 +43,9 @@ def get(ax_id, abstract, bib, open_file, directory):
 
 @cli.command("set")
 # TODO: is the directory path always `loaded` even if we do not want to change the directory?
-@click.option("-dd", "--download-dir", help="Path to a directory.")
-@click.option("-bib", "--bib-file", help="Path to bib-file.")
-def set_download_dir(download_dir):
+@click.option("-dd", "--download-dir", help = "Path to a directory.")
+@click.option("-bib", "--bib-file", help = "Path to bib-file.")
+def set_download_dir(download_dir, bib_file):
     """ Set default directory where articles are downloaded to. """
     change_path(file = 'data', key = 'default directory', new_path = download_dir, path_type = "dir")
 
