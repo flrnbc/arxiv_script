@@ -15,17 +15,18 @@
     CLOSED: [2020-12-15 Tue 15:15]
 *** DONE -a show abstract
     CLOSED: [2020-12-15 Tue 15:15]
-*** TODO -d download directly (REALLY NEEDED?)
-****
+*** DONE -d download directly (REALLY NEEDED? --> decided against it for now)
+    CLOSED: [2020-12-21 Mon 21:29]
 *** TODO -bib get bib-entry
-**** TODO remove ax_id from title
+**** DONE remove ax_id from title
+     CLOSED: [2020-12-21 Mon 21:28]
 **** TODO curly braces around capital letters
 **** TODO how to deal with many authors?!?
-**** TODO also get the arxiv subject?
-**** TODO need also first names!
+**** TODO get the arxiv subject? --> mostly relevant if we want different folders for different subjects
+**** TODO also first names! --> how does bibtex deal with many authors (> 5?)
+**** TODO how to deal with {} in title?!
 ** TODO make it work for other OS (problem: file name...)
 ** TODO option to download in other directories (e.g. recognize different arXiv subjects)
 ** TODO zblatt
-** TODO bib
 ** TODO show recent, today in arxiv (how to browse?!?)
 ** TODO rename retrieve.py in axs.py (--> new install of script?)

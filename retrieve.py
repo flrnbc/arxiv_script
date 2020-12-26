@@ -67,11 +67,9 @@ def test_get_year():
     assert get_year("1010:12345") == "2010"
     return "tests pass!"
 
-#print('1308.2198'.zfill(9))
-
 def test_arxiv():
     print(arxiv('1308.2198'))
     print(arxiv('hep-th/0002138'))
 
 #print(test_get_year())
-test_arxiv()
+#test_arxiv()

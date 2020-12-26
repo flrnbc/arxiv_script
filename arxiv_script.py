@@ -13,7 +13,7 @@ def cli():
 @cli.command("get")
 @click.option("-a", "--abstract", is_flag = True, help = "Show abstract of the article. Does _not_ download it.")
 @click.option("-o",  "--open-file", is_flag = True, help = "Opens the article after download.")
-@click.option("--bib", is_flag = True, help = "Adds bib-entry of the article to the default bib-file.")
+@click.option("-bib", is_flag = True, help = "Adds bib-entry of the article to the default bib-file.")
 @click.option("-dir", "--directory", default = default_directory, help = "Download article to given directory (instead of to the default one).")
 @click.argument("ax_id")
 def get(ax_id, abstract, bib, open_file, directory):
@@ -27,7 +27,7 @@ def get(ax_id, abstract, bib, open_file, directory):
         if abstract:
             print("Abstract: \n{}".format(article.abstract))
         elif bib:
-            print(article.bib())
+            article.bib()
         else:
             if directory == "":
                 # TODO: needs to be changed if we rename the script

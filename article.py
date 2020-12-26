@@ -3,9 +3,19 @@ from path_control import load
 import requests
 import time
 
-## article class
-# add some meta-data?
+# helper function(s)
+def bib_title(string):
+    """ Helper function to create correct title for bibtex, i.e. curly braces around captial words
+        to actually print them in captial.
+    """
+    split_string = string.split()
+    split_string = ["{{{}}}".format(w) if w[0] == w[0].capitalize() else w for w in split_string]
+    return ' '.join(split_string)
 
+
+
+
+# article class
 class Article:
     def __init__(self, title, authors, abstract, ax_id, year, main_subject):
         self.title = title
@@ -37,5 +47,17 @@ class Article:
         # TODO: think about tag!
         tag = "{}-{}".format(self.authors, self.ax_id)
         url = "https://arxiv.org/abs/{}".format(self.ax_id)
-        bib_entry = "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},\n\tNote = {{\\href{{{3}}}{{arXiv:{4}}}}},\n}}".format(tag, self.authors, self.title, url, self.ax_id)
+        title = bib_title(self.title)
+        bib_entry = "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},\n\tYear = {{{3}}},\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}".format(tag, self.authors, title, self.year, url, self.ax_id)
         print(bib_entry)
+
+
+
+# tests
+def test_bib_title():
+    test_string = "A crucial input to the Geometry of the Universe"
+    test_string2 = "Quasar-CMB" # seen it was not `embraced` in 2011.01234
+    print(bib_title(test_string))
+    print(bib_title(test_string2))
+
+#test_bib_title()
