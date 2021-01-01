@@ -14,19 +14,33 @@
 *** DONE -o (open file after download) (THINK ABOUT OPTION)
     CLOSED: [2020-12-15 Tue 15:15]
 *** DONE -a show abstract
-    CLOSED: [2020-12-15 Tue 15:15]
+    CLOSED: [2021-01-01 Fri 12:08]
 *** DONE -d download directly (REALLY NEEDED? --> decided against it for now)
     CLOSED: [2020-12-21 Mon 21:29]
-*** TODO -bib get bib-entry
+*** DONE -bib get bib-entry
+    CLOSED: [2021-01-01 Fri 13:05]
 **** DONE remove ax_id from title
      CLOSED: [2020-12-21 Mon 21:28]
-**** TODO curly braces around capital letters
-**** TODO how to deal with many authors?!?
+**** DONE curly braces around capital letters/words
+     CLOSED: [2020-12-27 Sun 17:05]
 **** TODO get the arxiv subject? --> mostly relevant if we want different folders for different subjects
-**** TODO also first names! --> how does bibtex deal with many authors (> 5?)
-**** TODO how to deal with {} in title?!
-** TODO make it work for other OS (problem: file name...)
-** TODO option to download in other directories (e.g. recognize different arXiv subjects)
-** TODO zblatt
-** TODO show recent, today in arxiv (how to browse?!?)
-** TODO rename retrieve.py in axs.py (--> new install of script?)
+**** DONE meaningful tags? (somewhat too long atm but hopefully recognizable) (note: we assume that the user uses a tex editor with auto-completion for keys...)
+     CLOSED: [2021-01-01 Fri 13:03]
+**** DONE how to deal with many authors?!? (also ok for now...)
+     CLOSED: [2021-01-01 Fri 13:05]
+**** DONE also first names! --> how does bibtex deal with many authors (> 5?) (just `contract' the short authors' name)
+     CLOSED: [2021-01-01 Fri 12:05]
+**** DONE how to deal with {} in title?!
+     CLOSED: [2020-12-27 Sun 17:05]
+**** TODO still need to take care of some other special chars...
+** flags for 'set':
+*** TODO [#A] set bibtex-file where bibtex-entry is appended to.
+** TODO [#A] make it work for other OS (problem: file name...)
+** TODO [#A] design decision: it seems more intuitive to use `show' instead of 'get -a' ...
+** TODO [#A] in retrieve.py: necessary to use zfill?
+
+** TODO [#B] write some short documentation: what do the different .py-files do etc.
+** TODO [#B] rename retrieve.py in axs.py (--> new install of script?)
+** TODO [#B] zblatt
+** TODO [#C] show recent, today in arxiv (how to browse?!?)
+** TODO [#C] design decision: option to download in other directories (e.g. recognize different arXiv subjects)

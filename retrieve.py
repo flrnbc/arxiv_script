@@ -1,3 +1,7 @@
+""" Main functions to retrieve the relevant data of the article corresponding
+    to the given arXiv identifier. Also helper function to check if arXiv identifier exists.
+"""
+
 import article
 from lxml import html
 import requests
@@ -20,37 +24,40 @@ def get_year(ax_id):
             year = '20' + search_old[2]
     return year
 
-
 def arxiv(ax_id):
     ''' Ask for arXiv identifier and return corresponding Article class. '''
     # python 3 truncates leading zeros but these might occur in arxiv identifiers
+    # TODO: check!
     ax_id = str(ax_id).zfill(9)
     article_year = get_year(ax_id)
     abs_url = 'https://arxiv.org/abs/{}'.format(ax_id)
     src_abs = requests.get(abs_url)
+
     # obtain a _structured_ document ("tree") of source of abs_url
     page_tree =  html.fromstring(src_abs.content)
 
     # extract title and abstract from page tree
     title = ' '.join(page_tree.xpath('//meta[@name="citation_title"]/@content'))
     abstract = ' '.join(page_tree.xpath('//meta[@property="og:description"]/@content'))
-
     # get main subject from page tree
     main_subject = page_tree.xpath('//span [@class="primary-subject"]')[0].text_content()
-
-    # create a convenient authors' name
+    # first get all authors (formate compatible with bibtex)
     all_authors = page_tree.xpath('//meta[@name="citation_author"]/@content')
-    authors_list = [a.split(', ')[0] for a in all_authors[:3]]
-    if len(all_authors) > 3:
-        authors_name = authors_list[0] + ' et al'
-    elif 1 < len(all_authors) <= 3:
-        authors_name = ', '.join(authors_list[:-1])
-        authors_name += ' and ' + authors_list[-1]
+    if len(all_authors) > 1:
+        authors_name = ' and '.join(all_authors)
     else:
-        authors_name = authors_list[0]              # TODO: IMPROVE!?!?
+        authors_name = all_authors[0]
+    # second create a short authors' name, e.g. to create file name
+    authors_short_list = [a.split(', ')[0] for a in all_authors[:3]]
+    if len(all_authors) > 3:
+        authors_short_name = authors_short_list[0] + ' et al'
+    elif 1 < len(all_authors) <= 3:
+        authors_short_name = ', '.join(authors_short_list[:-1])
+        authors_short_name += ' and ' + authors_short_list[-1]
+    else:
+        authors_short_name = authors_short_list[0]              # TODO: IMPROVE!?!?
 
-    return article.Article(title = title, authors = authors_name, abstract = abstract, ax_id = ax_id, year = article_year, main_subject = main_subject)
-
+    return article.Article(title = title, authors = authors_name, authors_short = authors_short_name, abstract = abstract, ax_id = ax_id, year = article_year, main_subject = main_subject)
 
 def check(ax_id):
     ''' Helper function to check if arXiv identifier exists. '''
@@ -59,7 +66,8 @@ def check(ax_id):
     # check status of request
     return r.status_code == requests.codes.ok
 
-# short tests
+
+# tests
 def test_get_year():
     # print(get_year("hep-th/99032314"))
     assert get_year("hep-th/99032314") == "1999"

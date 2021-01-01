@@ -8,7 +8,7 @@ default_directory = load('data')['default directory']
 
 @click.group()
 def cli():
-    """ Script to download and show arXiv articles. Version 0.1. """
+    """ Script to download, show arXiv articles and create a bibtex entry for them. Version 0.1. """
 
 @cli.command("get")
 @click.option("-a", "--abstract", is_flag = True, help = "Show abstract of the article. Does _not_ download it.")
@@ -17,16 +17,17 @@ def cli():
 @click.option("-dir", "--directory", default = default_directory, help = "Download article to given directory (instead of to the default one).")
 @click.argument("ax_id")
 def get(ax_id, abstract, bib, open_file, directory):
-    ''' Ask for arXiv identifier and download article. '''
+    ''' Ask for arXiv identifier and download, show abstract or create a bibtex entry article. '''
     if retrieve.check(ax_id) == False:
         print("Not a correct arXiv identifier, please try again.")
     else:
         article = retrieve.arxiv(ax_id)
-        print("{} \nby {} \n".format(article.title, article.authors))
+        print("{} \nby {} \n".format(article.title, article.authors_short))
         # decided to only print abstract when this flag is given (comes closer to 'browsing' articles)
         if abstract:
             print("Abstract: \n{}".format(article.abstract))
         elif bib:
+            print("BibTeX entry for this article:\n")
             article.bib()
         else:
             if directory == "":
