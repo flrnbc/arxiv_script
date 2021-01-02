@@ -37,10 +37,15 @@
 *** TODO [#A] set bibtex-file where bibtex-entry is appended to.
 ** TODO [#A] make it work for other OS (problem: file name...)
 ** TODO [#A] design decision: it seems more intuitive to use `show' instead of 'get -a' ...
+** TODO [#A] another design decision: should we remove 'get' altogether?
 ** TODO [#A] in retrieve.py: necessary to use zfill?
+** TODO [#A] check if default_directory == '' is detected.
+** TODO [#A] check special characters in bib-keys and titles
 
+** TODO [#B] upload to github!
 ** TODO [#B] write some short documentation: what do the different .py-files do etc.
 ** TODO [#B] rename retrieve.py in axs.py (--> new install of script?)
 ** TODO [#B] zblatt
+
 ** TODO [#C] show recent, today in arxiv (how to browse?!?)
 ** TODO [#C] design decision: option to download in other directories (e.g. recognize different arXiv subjects)

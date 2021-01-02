@@ -91,7 +91,7 @@ class Article:
         url = "https://arxiv.org/abs/{}".format(self.ax_id)
         title = bib_title(self.title)
         bib_entry = "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},\n\tYear = {{{3}}},\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}".format(article_key, self.authors, title, self.year, url, self.ax_id)
-        print(bib_entry)
+        return bib_entry
 
 
 # tests
