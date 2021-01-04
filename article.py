@@ -45,7 +45,7 @@ class Article:
         self.main_subject = main_subject
 
     def __str__(self):
-        return f"Title:\n{self.title} \n\nAuthors:\n{self.authors}\n\nAbstract:\n{self.abstract} \n\narXiv identifier:\n{self.ax_id} \n\nYear: \n{self.year} \n\nMain subject: \n{self.main_subject}"
+        return f"\nTitle:\n{self.title} \n\nAuthors:\n{self.authors}\n\nAbstract:\n{self.abstract} \n\narXiv identifier:\n{self.ax_id} \n\nYear: \n{self.year} \n\nMain subject: \n{self.main_subject}\n"
 
     default_directory = load('data')['default directory']
     default_bib = load('data')['bib-file']
