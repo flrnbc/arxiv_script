@@ -76,10 +76,10 @@ class Article:
             re.sub(r'\s', '', authors_key)    # NOTE: there might be names like "de ..."
         else:
         ## remove ',' as well as 'and' if there are more authors
-            authors_short_list = re.sub(r'and\b|,', '', self.authors_short)
+            authors_short_list = re.sub(r'and\b|,|\s', '', self.authors_short)
             authors_key = ''.join(a[0] for a in authors_short_list)
         # key for title
-        title_key = re.sub(r'of\b|a\b|the\b|in\b|on\b|,', '', self.title)
+        title_key = re.sub(r'of\b|a\b|the\b|in\b|on\b|and\b|or\b|,', '', self.title)
         title_key_split = title_key.split()
         title_key = ''.join(t.capitalize() for t in title_key_split[:3])
         return authors_key + "_" + title_key + "_" + self.ax_id    # TODO: add arxiv identifier only to make key unique --> better way?

@@ -3,9 +3,10 @@
 ** TODO what if no/false directory is given?
 
 * to add/change
-** DONE only one function (replace show with get but ask to download)
+** DONE only one function (replace show with get but ask to download) --> changed later on...
    CLOSED: [2020-12-12 Sat 19:38]
-** TODO flags for 'get':
+** DONE flags for 'get':
+   CLOSED: [2021-01-05 Tue 10:55]
 *** DONE --dir (set default dir); also show default directory in help
     CLOSED: [2020-12-19 Sat 22:00]
     Note: instead introduced a set command.
@@ -13,36 +14,41 @@
     CLOSED: [2020-12-15 Tue 15:47]
 *** DONE -o (open file after download) (THINK ABOUT OPTION)
     CLOSED: [2020-12-15 Tue 15:15]
-*** DONE -a show abstract
-    CLOSED: [2021-01-01 Fri 12:08]
-*** DONE -d download directly (REALLY NEEDED? --> decided against it for now)
-    CLOSED: [2020-12-21 Mon 21:29]
-*** DONE -bib get bib-entry
+*** abandoned flags (moved to other commands etc.)
+**** -a show abstract
+
+**** -d download directly (REALLY NEEDED? --> decided against it for now)
+
+** TODO -bib get bib-entry
+*** DONE remove ax_id from title
+    CLOSED: [2020-12-21 Mon 21:28]
+*** DONE curly braces around capital letters/words
+    CLOSED: [2020-12-27 Sun 17:05]
+*** TODO get the arxiv subject? --> mostly relevant if we want different folders for different subjects
+*** DONE meaningful tags? (somewhat too long atm but hopefully recognizable) (note: we assume that the user uses a tex editor with auto-completion for keys...)
+    CLOSED: [2021-01-01 Fri 13:03]
+*** DONE how to deal with many authors?!? (also ok for now...)
     CLOSED: [2021-01-01 Fri 13:05]
-**** DONE remove ax_id from title
-     CLOSED: [2020-12-21 Mon 21:28]
-**** DONE curly braces around capital letters/words
-     CLOSED: [2020-12-27 Sun 17:05]
-**** TODO get the arxiv subject? --> mostly relevant if we want different folders for different subjects
-**** DONE meaningful tags? (somewhat too long atm but hopefully recognizable) (note: we assume that the user uses a tex editor with auto-completion for keys...)
-     CLOSED: [2021-01-01 Fri 13:03]
-**** DONE how to deal with many authors?!? (also ok for now...)
-     CLOSED: [2021-01-01 Fri 13:05]
-**** DONE also first names! --> how does bibtex deal with many authors (> 5?) (just `contract' the short authors' name)
-     CLOSED: [2021-01-01 Fri 12:05]
-**** DONE how to deal with {} in title?!
-     CLOSED: [2020-12-27 Sun 17:05]
-**** TODO still need to take care of some other special chars...
+*** DONE also first names! --> how does bibtex deal with many authors (> 5?) (just `contract' the short authors' name)
+    CLOSED: [2021-01-01 Fri 12:05]
+*** DONE how to deal with {} in title?!
+    CLOSED: [2020-12-27 Sun 17:05]
 ** flags for 'set':
 *** TODO [#A] set bibtex-file where bibtex-entry is appended to.
 ** TODO [#A] make it work for other OS (problem: file name...)
-** DONE [#A] design decision: it seems more intuitive to use `show' instead of 'get -a' ...
-   CLOSED: [2021-01-02 Sat 21:41]
-** DONE [#A] another design decision: should we remove 'get' altogether? (seems to only complicate things with Click...)
-   CLOSED: [2021-01-02 Sat 21:42]
 ** TODO [#A] in retrieve.py: necessary to use zfill?
-** TODO [#A] check if default_directory == '' is detected.
-** TODO [#A] check special characters in bib-keys and titles
+** DONE [#A] BUG: bibtex entry for three authors...
+   CLOSED: [2021-01-06 Wed 21:00]
+** TODO [#A] check special characters in bib-keys and titles (also remove 'and', 'or' etc.?); 'the' correctly removed? (2011.01235)
+** TODO [#A] 'arxiv_script AX_ID bib' alone does not work...
+** DONE [#A] design decision: it seems more intuitive to use `show' instead of 'get -a'.
+   CLOSED: [2021-01-02 Sat 21:41]
+** DONE [#A] another design decision: should we remove 'get' altogether? (seems to only complicate things with Click... however, still restructured the script)
+   CLOSED: [2021-01-02 Sat 21:42]
+** DONE [#A] check if default_directory == '' is detected.
+   CLOSED: [2021-01-06 Wed 11:09]
+** DONE [#A] think about what we show before appending a bibtex-entry; related: always ask user before downloading/appending?
+   CLOSED: [2021-01-06 Wed 11:01]
 
 ** TODO [#B] upload to github!
 ** TODO [#B] write some short documentation: what do the different .py-files do etc.
@@ -50,6 +56,9 @@
 ** TODO [#B] zblatt
 ** TODO [#B] instead of year (for an article) print release date?! (year is clear from identifier...)
 ** TODO [#B] add minor subjects?
+
+** TODO [#B] space between entries necessary? (it's not too bad without because of the curly braces)
+
 
 ** TODO [#C] show recent, today in arxiv (how to browse?!?)
 ** TODO [#C] design decision: option to download in other directories (e.g. recognize different arXiv subjects)
