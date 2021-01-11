@@ -10,7 +10,7 @@ import re
 
 def get_year(ax_id):
     """ Extract the year from an arXiv identifier (in format YYYY). """
-    modern_ax_id = re.compile(r'([0-9]{2})([0-9]{2}).([0-9]+)')
+    modern_ax_id = re.compile(r'([0-9]{2})([0-9]{2})\.([0-9]+)')
     search_modern = re.search(modern_ax_id, ax_id)
     if search_modern:
         year = '20' + search_modern[1]
@@ -70,6 +70,7 @@ def check(ax_id):
 # tests
 def test_get_year():
     # print(get_year("hep-th/99032314"))
+    assert get_year("cmp-lg/9404002") == "1994"
     assert get_year("hep-th/99032314") == "1999"
     assert get_year("mathGT/00112314") == "2000"
     assert get_year("1010:12345") == "2010"

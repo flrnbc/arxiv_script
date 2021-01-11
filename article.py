@@ -6,11 +6,26 @@ import time
 
 # helper function(s)
 def escape_special_chars(string, special_chars):
-    """ Escpae special characters via adding backslash. """
+    """ Escape special characters via adding backslash. """
     escape_string = string
     for ss in special_chars:
         escape_string = re.sub(ss, '\\' + ss, escape_string)
     return escape_string
+
+def delete_words(string, to_delete, case_sensitive = True):
+    """ Delete a list of words from given string. If case_sensitive is False, ignore if words in to_delete are captialized or not. """
+    # NOTE: I couldn't find a way to remove e.g. the article 'a' from a string with regex.
+    # For example, re.sub(r'a\b', '', str) also replaces 'a' at the end of a word...
+    # NOTE however: it doesn't catch the words if they are followed e.g. by a comma.
+    # In practise, this should not be a problem though.
+    split_string = string.split()
+    if case_sensitive == False:
+        to_delete_caps = [w.capitalize() for w in to_delete]
+        to_delete += to_delete_caps
+    for w in to_delete:
+        while w in split_string:
+            split_string.remove(w)
+    return ' '.join(split_string)
 
 def bib_title(string):
     """ Helper function to create correct title for bibtex, i.e. curly braces around captial words
@@ -53,14 +68,18 @@ class Article:
     def download(self, save_dir = default_directory):
         """ Download article to save_dir. """
         file_name = self.authors_short + '-' + self.year + '-' + self.title
+        file_path = '{}/{}.pdf'.format(save_dir, file_name)
         # request url of pdf
         pdf_url = 'https://arxiv.org/pdf/{}.pdf'.format(self.ax_id)
         r_pdf = requests.get(pdf_url)
         # download file with delay
-        print("Preparing download... (press Ctrl + c to cancel)")
-        time.sleep(3)
-        open('{}/{}.pdf'.format(save_dir, file_name), 'wb').write(r_pdf.content)
-        return "{}/{}.pdf".format(save_dir, file_name)
+        t = 3
+        while t:
+            print("Download in {} second(s) (press Ctrl + c to cancel).".format(t), end='\r')
+            time.sleep(1)
+            t -= 1
+        open(file_path, 'wb').write(r_pdf.content)
+        return file_path
 
     def bib_key(self):
         """ Create a convenient bibtex entry.
@@ -71,19 +90,19 @@ class Article:
         # key for authors
         # NOTE: somewhat `hacky` and inefficient because we already implicitly generate a list of authors when retrieving the article
         # TODO: what about accents? E.g. in d'Angolo or French accents etc.
-        if re.search(r',', self.authors_short) == None:
-            authors_key = re.sub(r' et al', r'EtAl', self.authors_short)    # only necessary > 3 authors
-            re.sub(r'\s', '', authors_key)    # NOTE: there might be names like "de ..."
-        else:
-        ## remove ',' as well as 'and' if there are more authors
-            authors_short_list = re.sub(r'and\b|,|\s', '', self.authors_short)
-            authors_key = ''.join(a[0] for a in authors_short_list)
+        #if re.search(r',', self.authors_short) == None:
+        authors_key = re.sub(r' et al', r'EtAl', self.authors_short)    # only necessary > 3 authors
+        authors_key = re.sub(r'and\b|,|\s', '', authors_key)
         # key for title
-        title_key = re.sub(r'of\b|a\b|the\b|in\b|on\b|and\b|or\b|,', '', self.title)
+        ## remove most common propositions and articles
+        to_remove = ['a', 'and', 'in', 'of', 'on', 'or', 'the']
+        title_key = delete_words(self.title, to_remove, case_sensitive = False)
+        print(title_key)
+        ## remove characters which are not allowed in bibtex key (or unnecessary)
+        remove_chars = re.compile(r'[\\{},~#%:"]')
         title_key_split = title_key.split()
         title_key = ''.join(t.capitalize() for t in title_key_split[:3])
         return authors_key + "_" + title_key + "_" + self.ax_id    # TODO: add arxiv identifier only to make key unique --> better way?
-
 
     def bib(self):#, bib_file = default_bib):
         """ Create a bibtex entry for the given article using bib_key and bib_tile. """
@@ -92,16 +111,3 @@ class Article:
         title = bib_title(self.title)
         bib_entry = "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},\n\tYear = {{{3}}},\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}".format(article_key, self.authors, title, self.year, url, self.ax_id)
         return bib_entry
-
-
-# tests
-def test_bib_title():
-    test_string = "A crucial input to the Geometry of the Universe, the Quasar-CMB and its relation to mRNA and the $\zeta$-function. Morever, some brackets { { } can not hurt either."
-    print(bib_title(test_string))
-
-def test_escape():
-    test_string = r'Here is a lonlely bracket { and here is another one }. Now comes " and }.'
-    print(escape_special_chars(test_string, special_chars = [r"[{}]"]))
-
-#test_bib_title()
-#test_escape()

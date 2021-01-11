@@ -35,12 +35,19 @@
     CLOSED: [2020-12-27 Sun 17:05]
 ** flags for 'set':
 *** TODO [#A] set bibtex-file where bibtex-entry is appended to.
-** TODO [#A] make it work for other OS (problem: file name...)
-** TODO [#A] in retrieve.py: necessary to use zfill?
+** DONE [#A] make it work for other OS (problem: file name...)
+   CLOSED: [2021-01-10 Sun 21:08]
+** TODO [#A] need to test for other OS --> docker?!?
+** DONE [#A] BUG: year not correctly retrieved
+   CLOSED: [2021-01-10 Sun 19:10]
+** DONE [#A] in retrieve.py: necessary to use zfill? OK for now.
+   CLOSED: [2021-01-10 Sun 18:57]
 ** DONE [#A] BUG: bibtex entry for three authors...
    CLOSED: [2021-01-06 Wed 21:00]
-** TODO [#A] check special characters in bib-keys and titles (also remove 'and', 'or' etc.?); 'the' correctly removed? (2011.01235)
-** TODO [#A] 'arxiv_script AX_ID bib' alone does not work...
+** DONE [#A] check special characters in bib-keys and titles (also remove ':', 'and', 'or' etc.?); 'the' correctly removed? (2011.01235)
+   CLOSED: [2021-01-10 Sun 18:52] NOTE: might need an update later
+** DONE [#A] 'arxiv_script AX_ID bib' alone does not work... (--> changed to always ask to add)
+   CLOSED: [2021-01-06 Wed 21:49]
 ** DONE [#A] design decision: it seems more intuitive to use `show' instead of 'get -a'.
    CLOSED: [2021-01-02 Sat 21:41]
 ** DONE [#A] another design decision: should we remove 'get' altogether? (seems to only complicate things with Click... however, still restructured the script)

@@ -1,5 +1,5 @@
 import retrieve
-from path_control import load, change_path, check_saved_path
+from path_control import load, change_path, check_saved_path, get_opener
 import click
 import subprocess
 import os
@@ -55,11 +55,12 @@ def get(ctx, open_file, directory = default_directory):
     elif os.path.isdir(directory) == False:
         print('Please give a valid absolute path to a directory.')
     else:
-        saved_path = article.download(save_dir = directory)
-        print("Article saved as {}.".format(os.path.abspath(saved_path)))
+        saved_path = os.path.abspath(article.download(save_dir = directory))
+        print("Article saved as {}.".format(saved_path))
         # TODO: needs to be adapted to other os as well!
         if open_file:
-            subprocess.call(["open", saved_path])
+            opener = get_opener()
+            subprocess.call([f"{opener}", saved_path])
 
 @cli.command("show")
 @click.option("-f", "--full", is_flag = True, help = "Shows details of article (including all authors and main subject on arXiv).")
