@@ -67,7 +67,7 @@ class Article:
 
     def download(self, save_dir = default_directory):
         """ Download article to save_dir. """
-        file_name = self.authors_short + '-' + self.year + '-' + self.title
+        file_name = self.authors_short + '-' + self.title + '_' + self.year
         file_path = '{}/{}.pdf'.format(save_dir, file_name)
         # request url of pdf
         pdf_url = 'https://arxiv.org/pdf/{}.pdf'.format(self.ax_id)
