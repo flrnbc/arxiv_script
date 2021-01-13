@@ -42,18 +42,21 @@ def bib_title(string):
 # article class
 class Article:
     """ Class for articles. All attributes are self-explanatory except for
-        - authors_short: short version of the authors' names which is used to save an article or create a bibtex key.
+        - authors_short: short version of the authors' names which is printed before a download
           Formate (as created via retrieve.py):
           2 authors: A and B.
           3 authors: A, B and C.
           > 3 authors: A et al.
+        - authors_contracted: essentially remove 'and' as well as all space in authors_short;
+          used for file name and bibtex key.
         - ax_id: short for arxiv identifier.
         - main_subject: main arxiv subject.
     """
-    def __init__(self, title, authors, authors_short, abstract, ax_id, year, main_subject):
+    def __init__(self, title, authors, authors_short, authors_contracted, abstract, ax_id, year, main_subject):
         self.title = title
         self.authors = authors
         self.authors_short = authors_short
+        self.authors_contracted = authors_contracted
         self.abstract = abstract
         self.ax_id = ax_id
         self.year = year
@@ -67,7 +70,10 @@ class Article:
 
     def download(self, save_dir = default_directory):
         """ Download article to save_dir. """
-        file_name = self.authors_short + '-' + self.title + '_' + self.year
+        # create convenient file name
+        title_split = self.title.split()
+        title_contracted = '_'.join(title_split[:10]) # more intelligent "cut-off"?
+        file_name = self.authors_contracted + '-' + title_contracted + '-' + self.year
         file_path = '{}/{}.pdf'.format(save_dir, file_name)
         # request url of pdf
         pdf_url = 'https://arxiv.org/pdf/{}.pdf'.format(self.ax_id)
@@ -88,11 +94,7 @@ class Article:
             then take the first three words.
         """
         # key for authors
-        # NOTE: somewhat `hacky` and inefficient because we already implicitly generate a list of authors when retrieving the article
-        # TODO: what about accents? E.g. in d'Angolo or French accents etc.
-        #if re.search(r',', self.authors_short) == None:
-        authors_key = re.sub(r' et al', r'EtAl', self.authors_short)    # only necessary > 3 authors
-        authors_key = re.sub(r'and\b|,|\s', '', authors_key)
+        authors_key = self.authors_contracted
         # key for title
         ## remove most common propositions and articles
         to_remove = ['a', 'and', 'in', 'of', 'on', 'or', 'the']
@@ -102,7 +104,7 @@ class Article:
         remove_chars = re.compile(r'[\\{},~#%:"]')
         title_key_split = title_key.split()
         title_key = ''.join(t.capitalize() for t in title_key_split[:3])
-        return authors_key + "_" + title_key + "_" + self.ax_id    # TODO: add arxiv identifier only to make key unique --> better way?
+        return authors_key + "-" + title_key + "-" + self.ax_id    # TODO: add arxiv identifier only to make key unique --> better way?
 
     def bib(self):#, bib_file = default_bib):
         """ Create a bibtex entry for the given article using bib_key and bib_tile. """

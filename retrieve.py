@@ -47,17 +47,20 @@ def arxiv(ax_id):
         authors_name = ' and '.join(all_authors)
     else:
         authors_name = all_authors[0]
-    # second create a short authors' name, e.g. to create file name
+    # second create a short and 'contracted' authors' name, e.g. to create file name or bibtex key
     authors_short_list = [a.split(', ')[0] for a in all_authors[:3]]
     if len(all_authors) > 3:
-        authors_short_name = authors_short_list[0] + ' et al'
+        authors_short = authors_short_list[0] + ' et al'
+        authors_contracted = authors_short_list[0] + 'EtAl'
     elif 1 < len(all_authors) <= 3:
-        authors_short_name = ', '.join(authors_short_list[:-1])
-        authors_short_name += ' and ' + authors_short_list[-1]
+        authors_short = ', '.join(authors_short_list[:-1])
+        authors_short += ' and ' + authors_short_list[-1]
+        authors_contracted = ''.join(authors_short_list)
     else:
-        authors_short_name = authors_short_list[0]              # TODO: IMPROVE!?!?
+        authors_short = authors_short_list[0]              # TODO: IMPROVE!?!?
+        authors_contracted = authors_short
 
-    return article.Article(title = title, authors = authors_name, authors_short = authors_short_name, abstract = abstract, ax_id = ax_id, year = article_year, main_subject = main_subject)
+    return article.Article(title = title, authors = authors_name, authors_short = authors_short, authors_contracted = authors_contracted, abstract = abstract, ax_id = ax_id, year = article_year, main_subject = main_subject)
 
 def check(ax_id):
     ''' Helper function to check if arXiv identifier exists. '''
