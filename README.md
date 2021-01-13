@@ -1,5 +1,9 @@
-# ARXIV-SCRIPT
-Simple command line tool to view and download arxiv files directly from the terminal.
+# arXiv-script (axs)
+## background
+The arXiv (www.arxiv.org) is the most important open-access repository for electronic preprints in various sciences, e.g. Computer Science, Mathematics and Physics. Even though it is 'only' moderated and not peer-reviewed, ...
+
+## the script
+The arXiv script (axs) is a simple command line tool to view and download arXiv
 
 
 ## FUNCTIONALITY

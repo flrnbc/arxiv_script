@@ -65,7 +65,7 @@
 ** TODO [#B] add minor subjects?
 
 ** TODO [#B] space between entries necessary? (it's not too bad without because of the curly braces)
-
+** TODO [#B] maximal length of title?
 
 ** TODO [#C] show recent, today in arxiv (how to browse?!?)
 ** TODO [#C] design decision: option to download in other directories (e.g. recognize different arXiv subjects)
