@@ -26,7 +26,7 @@ def set_bib(ctx, bib_file):
         # NOTE: here we implicitly catch invalid paths.
     ctx.exit()
 
-# arXiv script
+# arXiv script (axs)
 @click.group()
 @click.option("--set-directory", expose_value = False, callback = set_download_dir, is_eager = True, help = "Set default directory to which articles are downloaded.")
 @click.option("--set-bib-file", expose_value = False, callback = set_bib, is_eager = True, help = "Set default bib-file to which BibTeX entries are added.")
