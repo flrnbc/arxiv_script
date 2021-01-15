@@ -59,13 +59,12 @@
 
 ** TODO [#B] upload to github!
 ** TODO [#B] write some short documentation: what do the different .py-files do etc.
-** TODO [#B] rename retrieve.py in axs.py (--> new install of script?)
+** DONE [#B] rename retrieve.py in axs.py (--> new install of script? yes, that's needed)
+   CLOSED: [2021-01-15 Fri 21:11]
 ** TODO [#B] zblatt
 ** TODO [#B] instead of year (for an article) print release date?! (year is clear from identifier...)
 ** TODO [#B] add minor subjects?
-
 ** TODO [#B] space between entries necessary? (it's not too bad without because of the curly braces)
-** TODO [#B] maximal length of title?
-
+** TODO [#B] maximal length of title? yes, BUT: then rather add the arxiv identifier at the end (instead of year) to make it unique?
 ** TODO [#C] show recent, today in arxiv (how to browse?!?)
 ** TODO [#C] design decision: option to download in other directories (e.g. recognize different arXiv subjects)
