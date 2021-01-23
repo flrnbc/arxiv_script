@@ -18,30 +18,29 @@ virtualenv venv
 ```bash
 pip install --editable . TODO why?
 ```
-In the following we will run all our commands in the virtual environment. 
+In the following we will run all our commands in the virtual environment.
 
 ## setup
-After installation it is recommended to set a default directory where articles are downloaded to. This is done via 
-```bash 
+After installation it is recommended to set a default directory where articles are downloaded to. This is done via
+```bash
 axs --set-directory PATH_TO_DIR
 ```
 where PATH_TO_DIR is your chosen directory path. Alternatively you can give a directory for each download, see below.
 
 ## the commands in detail
-The basic usage is the following 
+The basic usage is the following
 ```bash
 axs ax_id cmd flag
 ```
-where `ax_id` is an arXiv identifier, `cmd` one of the commands below and `flag` is an (optional) flag. Note that you can get help for each command 
+where `ax_id` is an arXiv identifier, `cmd` one of the commands below and `flag` is an (optional) flag. Note that you can get help for each command
 
 ### `show`
-This command prints the title, (some of) the authors and the abstract of the corresponding arXiv preprint. The flag `-f` gives a full version, i.e. additionally all authors and the main arXiv subject. 
+This command prints the title, (some of) the authors and the abstract of the corresponding arXiv preprint. The flag `-f` gives a full version, i.e. additionally all authors and the main arXiv subject.
 
 ### `get`
-Simply downloads the article to your default directory (if it was already set as explained above). 
+Simply downloads the article to your default directory (if it was already set as explained above).
 
 ### `bib`
-
 
 ## background
 (own motivation, Click...)
