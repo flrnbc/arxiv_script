@@ -6,12 +6,12 @@ The [arXiv](www.arxiv.org) is the most important open-access repository for prep
 - `bib` create a BibTeX entry for the preprint (and optionally add it to a .bib-file) to easily cite the preprint in LaTeX documents.
 
 ## example
-Given the arXiv identifier `math/0211159`, let's see what we can do with it (after the installation which is explained below): 
+Given the arXiv identifier `math/0211159`, let's see what we can do with it (after the installation which is explained below). Let's take a look at the preprint via
 ```bash
 axs math/0211159 show
 ```
-prints the title, authors, abstract and arXiv subject to the terminal. If we like the article, simply change `show` to `get`. 
-This downloads the article (to the default directory, see TODO below) in the convenient formate `AUTHOR(S)-TITLE-YEAR.pdf`. For example, in this case to
+This command prints the title, author(s), abstract and arXiv subject to the terminal. If we like the article, simply change `show` to `get`. 
+Then the article gets download (to the default directory, see TODO below) in the convenient formate `AUTHOR(S)-TITLE-YEAR.pdf`. For example, in this example to
 ```bash
 Perelman-The_entropy_formula_for_the_Ricci_flow_and_its_geometric_applications-2002.pdf
 ```
@@ -33,40 +33,62 @@ We are even asked if we want to automatically add this entry to our (default) .b
 ## installation
 At this stage, the _axs_ is still under development. Hence we require Python (preferably =>3.0) and pip for its installation. It is also recommended to install it in a virtual environment (TODO which package?). With these requirements in place do the follwing: (TODO works for any OS?!?)
 
-- git pull or copy repository
-- in a terminal, change to the directory where you downloaded this repo. Then create a new virtual environment, e.g. with the name `venv`, and activate it:
+- Pull this repository to your preferred directory via _git_ or simply copy the code. 
+- In a terminal, change to the directory where you downloaded this repository to. Then create a new virtual environment, e.g. with the name `venv`, and activate it:
 ```bash
 virtualenv venv
 . venv/bin/activate
 ```
-- finally, install the _axs_ via
+- Finally, install the _axs_ via
 ```bash
-pip install --editable . TODO why?
+pip install --editable . 
 ```
-In the following we will run all our commands in the virtual environment. 
+**NOTE:** In the following we will run all our commands in this virtual environment. 
 
 ## setup
 After installation it is recommended to set a default directory where articles are downloaded to. This is done via 
 ```bash 
 axs --set-directory PATH_TO_DIR
 ```
-where PATH_TO_DIR is your chosen directory path. Alternatively you can give a directory for each download, see below.
+where PATH_TO_DIR is your chosen directory path. Alternatively you can give a directory for each download, see below. To set a default .bib-file, where BibTeX-entries are added to, simply use
+```bash
+axs --set-bib-file PATH_TO_FILE
+```
+Here PATH_TO_FILE is your chosen default .bib-file where your BibTeX-entries will be added to. As before, you can alternatively choose a .bib-file for each BibTeX-entry individually, see below. TODO ADD
 
 ## the commands in detail
 The basic usage is the following 
 ```bash
 axs ax_id cmd flag
 ```
-where `ax_id` is an arXiv identifier, `cmd` one of the commands below and `flag` is an (optional) flag. Note that you can get help for each command 
+where `ax_id` is an arXiv identifier, `cmd` one of the commands below and `flag` is an (optional) flag. In fact, you can use several flags at once. 
+
+The flag `--help` provides you help for each command. Note that `axs --help` gives you quick general help. 
 
 ### `show`
-This command prints the title, (some of) the authors and the abstract of the corresponding arXiv preprint. The flag `-f` gives a full version, i.e. additionally all authors and the main arXiv subject. 
+This command prints the title, (some of) the authors, the abstract and the main arXiv subject of the corresponding arXiv preprint. The flag `-f` gives a full version, i.e. additionally all authors and the main arXiv subject. 
 
 ### `get`
-Simply downloads the article to your default directory (if it was already set as explained above). 
+Simply downloads the article to your default directory (if it was already set as explained above) under the file name `AUTHOR(S)-TITLE-YEAR.pdf`. Two comments on the file name: 
+
++ For => 3 authors, we use the first author and append 'et al' as often common. 
++ The title name is shortened to TODO words to prevent too long file names. 
+
+Before the download, the title and author(s) are printed to the terminal and there is a short countdown so that you can still cancel the download. 
+
+With the flag `-dir` (or `--directory`) you can download the article to another directory, i.e. 
+```bash
+axs ax_id get -dir PATH_TO_DIR
+```
+downloads the article to the directory at PATH_TO_DIR. 
+The flag `-o` (or `--open`) opens the preprint after the download. 
 
 ### `bib`
+Prints a BibTeX-entry of the article to the terminal and asks if it should be added to your default .bib-file (if it has been set before). Alternatively, use the flag `-add` (or `--add-to`) combined with the path to another .bib-file to which you want to add the BibTeX-entry. Note that at the moment, the BibTeX-entry is simply added to the end of the corresponding .bib-file.
 
+Two comments on the BibTeX-entry: 
++ The BibTeX-key, which is used to cite the preprint in a LaTeX document (`Perelman-EntropyFormulaFor-math/0211159` in our example above), is created is in the formate `AUTHOR(S)-TITLE-AX_ID` where: 
++
 
 ## background
 (own motivation, Click...)
