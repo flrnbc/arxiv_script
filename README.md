@@ -20,7 +20,7 @@ If we decide to cite this preprint in some LaTeX document using BibTeX, simply c
 axs math/0211159 bib
 ```
 This yields the following BibTeX-entry:
-```bash
+```
 @article{Perelman-EntropyFormulaFor-math/0211159,
 	Author = {Perelman, Grisha},
 	Title = {{The} entropy formula for the {Ricci} flow and its geometric applications},
