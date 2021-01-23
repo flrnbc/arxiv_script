@@ -56,6 +56,11 @@
    CLOSED: [2021-01-06 Wed 11:09]
 ** DONE [#A] think about what we show before appending a bibtex-entry; related: always ask user before downloading/appending?
    CLOSED: [2021-01-06 Wed 11:01]
+** TODO [#B] some of the help texts are too long to display
+** TODO [#B] extend title length for saved files (seems to be not long enough for many sciences)
+** TODO [#B] also removed 'for'? (to create bibtex-key)
+** TODO [#B] -add *and* -add-to for bib?!
+
 
 ** TODO [#B] upload to github!
 ** TODO [#B] write some short documentation: what do the different .py-files do etc.
