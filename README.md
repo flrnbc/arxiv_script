@@ -87,8 +87,11 @@ The flag `-o` (or `--open`) opens the preprint after the download.
 Prints a BibTeX-entry of the article to the terminal and asks if it should be added to your default .bib-file (if it has been set before). Alternatively, use the flag `-add` (or `--add-to`) combined with the path to another .bib-file to which you want to add the BibTeX-entry. Note that at the moment, the BibTeX-entry is simply added to the end of the corresponding .bib-file.
 
 Two comments on the BibTeX-entry: 
-+ The BibTeX-key, which is used to cite the preprint in a LaTeX document (`Perelman-EntropyFormulaFor-math/0211159` in our example above), is created is in the formate `AUTHOR(S)-TITLE-AX_ID` where: 
-+
++ The BibTeX-key, which is used to cite the preprint in a LaTeX document (`Perelman-EntropyFormulaFor-math/0211159` in our example above), is created is in the formate `AUTHOR(S)-SHORT_TITLE-AX_ID` where
+++ `AUTHOR(S)`: as for the file name but without white spaces.
+++ `SHORT_TITLE`: created from the title by removing all articles & most common prepositions and then taking the first three words. Finally remove all white spaces. 
+++ `AX_ID`: the arXiv identifier which is added to make the BibTeX-entry unique. 
++ The reason for creating the BibTeX-entry in this way is to easily find with a LaTeX editor (so almost all modern ones) that has autocompletion for citations but without being too long. 
 
 ## background
 (own motivation, Click...)
