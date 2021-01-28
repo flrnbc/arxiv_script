@@ -103,7 +103,7 @@ class Article:
         authors_key = self.authors_contracted
         # key for title
         ## remove most common propositions and articles
-        to_remove = ['a', 'and', 'in', 'of', 'on', 'or', 'the']
+        to_remove = ['a', 'and', 'in', 'of', 'on', 'or', 'the', 'for']
         title_key = delete_words(self.title, to_remove, case_sensitive = False)
         print(title_key)
         ## remove characters which are not allowed in bibtex key (or unnecessary)
