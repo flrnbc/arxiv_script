@@ -1,3 +1,7 @@
+""" Main code for the script mainly using Click
+    (see https://palletsprojects.com/p/click/).
+"""
+
 import retrieve
 from path_control import load, change_path, check_saved_path, get_opener
 import click
