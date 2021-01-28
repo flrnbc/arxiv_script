@@ -1,3 +1,7 @@
+"""Contains the definition of the article class with
+   its basic functionality (e.g. download and bibtex-entry).
+"""
+
 from lxml import html
 from path_control import load
 import requests
@@ -13,7 +17,9 @@ def escape_special_chars(string, special_chars):
     return escape_string
 
 def delete_words(string, to_delete, case_sensitive = True):
-    """ Delete a list of words from given string. If case_sensitive is False, ignore if words in to_delete are captialized or not. """
+    """ Delete a list of words from given string. If case_sensitive is False,
+        ignore if words in to_delete are captialized or not.
+    """
     # NOTE: I couldn't find a way to remove e.g. the article 'a' from a string with regex.
     # For example, re.sub(r'a\b', '', str) also replaces 'a' at the end of a word...
     # NOTE however: it doesn't catch the words if they are followed e.g. by a comma.
@@ -72,7 +78,7 @@ class Article:
         """ Download article to save_dir. """
         # create convenient file name
         title_split = self.title.split()
-        title_contracted = '_'.join(title_split[:10]) # more intelligent "cut-off"?
+        title_contracted = '_'.join(title_split[:15]) # more intelligent "cut-off"?
         file_name = self.authors_contracted + '-' + title_contracted + '-' + self.year
         file_path = '{}/{}.pdf'.format(save_dir, file_name)
         # request url of pdf
