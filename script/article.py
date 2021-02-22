@@ -3,7 +3,7 @@
 """
 
 from lxml import html
-from path_control import load
+from script.path_control import load
 import requests
 import re
 import time
@@ -71,8 +71,8 @@ class Article:
     def __str__(self):
         return f"\nTitle:\n{self.title} \n\nAuthors:\n{self.authors}\n\nAbstract:\n{self.abstract} \n\narXiv identifier:\n{self.ax_id} \n\nYear: \n{self.year} \n\nMain subject: \n{self.main_subject}\n"
 
-    default_directory = load('data')['default directory']
-    default_bib = load('data')['bib-file']
+    default_directory = load('script/data')['default directory']
+    default_bib = load('script/data')['bib-file']
 
     def download(self, save_dir = default_directory):
         """ Download article to save_dir. """

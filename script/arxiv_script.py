@@ -2,21 +2,21 @@
     (see https://palletsprojects.com/p/click/).
 """
 
-import retrieve
-from path_control import load, change_path, check_saved_path, get_opener
+import script.retrieve as retrieve
+from script.path_control import load, change_path, check_saved_path, get_opener
 import click
 import subprocess
 import os
 
-default_directory = load('data')['default directory']
-default_bib_file = load('data')['bib-file']
+default_directory = load('script/data')['default directory']
+default_bib_file = load('script/data')['bib-file']
 
 # callback functions to set default  download directory and bib file.
 def set_download_dir(ctx, directory):
     """ Set default directory where articles are downloaded to. """
     if not directory or ctx.resilient_parsing:
         return
-    change_path(file = 'data', key = 'default directory', new_path = directory, path_type = "dir")
+    change_path(file = 'script/data', key = 'default directory', new_path = directory, path_type = "dir")
     ctx.exit()
 
 def set_bib(ctx, bib_file):
@@ -26,7 +26,7 @@ def set_bib(ctx, bib_file):
     if os.path.splitext(bib_file)[1] != ".bib":
         print("Not a correct bib-file. Please try again.")
     else:
-        change_path(file = 'data', key = 'bib-file', new_path = bib_file, path_type = 'file')
+        change_path(file = 'script/data', key = 'bib-file', new_path = bib_file, path_type = 'file')
         # NOTE: here we implicitly catch invalid paths.
     ctx.exit()
 

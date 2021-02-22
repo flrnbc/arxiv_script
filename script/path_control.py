@@ -8,9 +8,9 @@ import os
 import json
 import platform
 
-def load(file):
+def load(path):
     ''' Load a data file as a json object. '''
-    with open (file, mode = 'r') as f:
+    with open(path, mode = 'r') as f:
         loaded_data = json.load(f)
     return loaded_data
 

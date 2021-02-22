@@ -2,7 +2,7 @@
     to the given arXiv identifier. Also helper function to check if arXiv identifier exists.
 """
 
-import article
+import script.article as article
 from lxml import html
 import requests
 import os
@@ -68,20 +68,3 @@ def check(ax_id):
     r = requests.get(abs_url)
     # check status of request
     return r.status_code == requests.codes.ok
-
-
-# tests
-def test_get_year():
-    # print(get_year("hep-th/99032314"))
-    assert get_year("cmp-lg/9404002") == "1994"
-    assert get_year("hep-th/99032314") == "1999"
-    assert get_year("mathGT/00112314") == "2000"
-    assert get_year("1010:12345") == "2010"
-    return "tests pass!"
-
-def test_arxiv():
-    print(arxiv('1308.2198'))
-    print(arxiv('hep-th/0002138'))
-
-#print(test_get_year())
-#test_arxiv()
