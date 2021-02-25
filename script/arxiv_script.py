@@ -1,22 +1,33 @@
 """ Main code for the script mainly using Click
-    (see https://palletsprojects.com/p/click/).
+    (see https://palletsprojects.com/p/click/
+    for details, in particular on the use of callback
+    functions).
 """
 
 import script.retrieve as retrieve
 from script.path_control import load, change_path, check_saved_path, get_opener
 import click
 import subprocess
+from dotenv import load_dotenv # allows for 'permanent local environments' in venvs
 import os
 
-default_directory = load('script/data')['default directory']
-default_bib_file = load('script/data')['bib-file']
+# load environment variables from local .env-file
+load_dotenv()
 
-# callback functions to set default  download directory and bib file.
+DEFAULT_DIRECTORY = os.getenv("DEFAULT_DIRECTORY")
+DEFAULT_BIB_FILE = os.getenv("DEFAULT_BIB_FILE")
+
+# callback functions to set default download directory and bib file.
 def set_download_dir(ctx, directory):
     """ Set default directory where articles are downloaded to. """
     if not directory or ctx.resilient_parsing:
         return
-    change_path(file = 'script/data', key = 'default directory', new_path = directory, path_type = "dir")
+    if check_path(new_path, "directory") == True:
+        os.environ["DEFAULT_DIRECTORY"] = directory
+        print('Your new default directory is {}.'.format(os.path.abspath(new_path)))
+    else:
+        print('Not a correct path. Please try again.')
+    #change_path(file = 'script/data', key = 'default directory', new_path = directory, path_type = "dir")
     ctx.exit()
 
 def set_bib(ctx, bib_file):
@@ -26,7 +37,11 @@ def set_bib(ctx, bib_file):
     if os.path.splitext(bib_file)[1] != ".bib":
         print("Not a correct bib-file. Please try again.")
     else:
-        change_path(file = 'script/data', key = 'bib-file', new_path = bib_file, path_type = 'file')
+        if check_path(bib_file, "file"):
+            os.environ("DEFAULT_BIB_FILE") = bib_file
+        else:
+            print("Not a correct path. Please try again.")
+            #change_path(file = 'script/data', key = 'bib-file', new_path = bib_file, path_type = 'file')
         # NOTE: here we implicitly catch invalid paths.
     ctx.exit()
 
@@ -47,9 +62,9 @@ def cli(ctx, ax_id):
 
 @cli.command("get")
 @click.option("-o",  "--open-file", is_flag = True, help = "Opens the article after download.")
-@click.option("-dir", "--directory", default = default_directory, help = "Download article to given directory (instead to the default one).")
+@click.option("-dir", "--directory", default = DEFAULT_DIRECTORY, help = "Download article to given directory (instead to the default one).")
 @click.pass_context
-def get(ctx, open_file, directory = default_directory):
+def get(ctx, open_file, directory = DEFAULT_DIRECTORY):
     ''' Download the article corresponding to an arXiv identifier. '''
     article = ctx.obj
     print("\n\"{}\" \nby {} \n".format(article.title, article.authors_short))
@@ -78,9 +93,9 @@ def show(ctx, full):
         print(article)
 
 @cli.command("bib")
-@click.option('-add', '--add-to', default = default_bib_file, help = "Path to a bib-file to which the BibTeX entry is added.")
+@click.option('-add', '--add-to', default = DEFAULT_BIB_FILE, help = "Path to a bib-file to which the BibTeX entry is added.")
 @click.pass_context
-def bib(ctx, add_to = default_bib_file):
+def bib(ctx, add_to = DEFAULT_BIB_FILE):
     ''' Create bibtex entry for an arXiv identifier (optionally add to default or some other bib-file). '''
     article = ctx.obj
     bib_entry = article.bib()
