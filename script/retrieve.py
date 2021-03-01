@@ -1,5 +1,6 @@
-""" Main functions to retrieve the relevant data of the article corresponding
-    to the given arXiv identifier. Also helper function to check if arXiv identifier exists.
+"""
+Main functions to retrieve the relevant data of the article corresponding
+to the given arXiv identifier. Also helper function to check if arXiv identifier exists.
 """
 
 import script.article as article

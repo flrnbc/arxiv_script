@@ -1,12 +1,16 @@
-"""Contains the definition of the article class with
-   its basic functionality (e.g. download and bibtex-entry).
+"""
+Contains the definition of the article class with
+its basic functionality (e.g. download and bibtex-entry).
 """
 
 from lxml import html
-from script.path_control import load
 import requests
 import re
 import time
+from dotenv import load_dotenv # allows for 'permanent local environments' in venvs
+import os
+
+load_dotenv()
 
 # helper function(s)
 def escape_special_chars(string, special_chars):
@@ -17,8 +21,9 @@ def escape_special_chars(string, special_chars):
     return escape_string
 
 def delete_words(string, to_delete, case_sensitive = True):
-    """ Delete a list of words from given string. If case_sensitive is False,
-        ignore if words in to_delete are captialized or not.
+    """
+    Delete a list of words from given string. If case_sensitive is False,
+    ignore if words in to_delete are captialized or not.
     """
     # NOTE: I couldn't find a way to remove e.g. the article 'a' from a string with regex.
     # For example, re.sub(r'a\b', '', str) also replaces 'a' at the end of a word...
@@ -34,8 +39,9 @@ def delete_words(string, to_delete, case_sensitive = True):
     return ' '.join(split_string)
 
 def bib_title(string):
-    """ Helper function to create correct title for bibtex, i.e. curly braces around captial words
-        to actually print them in captial and escaping special characters.
+    """
+    Helper function to create correct title for bibtex, i.e. curly braces around captial words
+    to actually print them in captial and escaping special characters.
     """
     caps = re.compile("[A-Z]")
     special = [r'"', r'{', r'}']
@@ -47,7 +53,8 @@ def bib_title(string):
 
 # article class
 class Article:
-    """ Class for articles. All attributes are self-explanatory except for
+    """
+    Class for articles. All attributes are self-explanatory except for
         - authors_short: short version of the authors' names which is printed before a download
           Formate (as created via retrieve.py):
           2 authors: A and B.
@@ -71,10 +78,7 @@ class Article:
     def __str__(self):
         return f"\nTitle:\n{self.title} \n\nAuthors:\n{self.authors}\n\nAbstract:\n{self.abstract} \n\narXiv identifier:\n{self.ax_id} \n\nYear: \n{self.year} \n\nMain subject: \n{self.main_subject}\n"
 
-    DEFAULT_DIRECTORY = load('script/data')['default directory']
-    DEFAULT_BIB = load('script/data')['bib-file']
-
-    def download(self, save_dir = DEFAULT_DIRECTORY):
+    def download(self, save_dir):
         """ Download article to save_dir. """
         # create convenient file name
         title_split = self.title.split()
@@ -94,10 +98,11 @@ class Article:
         return file_path
 
     def bib_key(self):
-        """ Create a convenient bibtex entry.
-            For authors: `Contract' the short authors' name, i.e. remove white space and capitalize 'et al' (if present).
-            For title: Remove commas as well as all common proposition and articles (i.e. 'on', 'in', 'a', 'the', ...);
-            then take the first three words.
+        """
+        Create a convenient bibtex entry.
+        For authors: `Contract' the short authors' name, i.e. remove white space and capitalize 'et al' (if present).
+        For title: Remove commas as well as all common proposition and articles (i.e. 'on', 'in', 'a', 'the', ...);
+        then take the first three words.
         """
         # key for authors
         authors_key = self.authors_contracted
@@ -112,7 +117,7 @@ class Article:
         title_key = ''.join(t.capitalize() for t in title_key_split[:3])
         return authors_key + "-" + title_key + "-" + self.ax_id    # TODO: add arxiv identifier only to make key unique --> better way?
 
-    def bib(self):#, bib_file = DEFAULT_BIB):
+    def bib(self):
         """ Create a bibtex entry for the given article using bib_key and bib_tile. """
         article_key = self.bib_key()
         url = "https://arxiv.org/abs/{}".format(self.ax_id)
