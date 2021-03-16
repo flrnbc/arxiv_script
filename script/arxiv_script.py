@@ -7,8 +7,8 @@ functions).
 
 import script.retrieve as retrieve
 from script.path_control import check_path, get_opener
-import click
 import subprocess
+import click
 from dotenv import load_dotenv, set_key, find_dotenv
 import os
 
@@ -19,10 +19,12 @@ load_dotenv(dotenv_file)
 # callback functions to set default download directory and bib file.
 def set_download_dir(ctx, directory):
     """ Set default directory where articles are downloaded to. """
+    # the following ensures that the parameters for --set-directory
+    # are passed to this function
     if not directory or ctx.resilient_parsing:
         return
     if check_path(directory, "directory") == True:
-        set_key(dotenv_file, "DEFAULT_DIRECTORY", directory)
+        set_key(dotenv_file, "DEFAULT_DIR", directory)
         print('New default directory has been set.')
     else:
         print('Not a correct path. Please try again.')
@@ -45,12 +47,16 @@ def set_bib(ctx, bib_file):
 
 # arXiv script (axs)
 @click.group()
-@click.option("--set-directory", expose_value = False, callback = set_download_dir, is_eager = True, help = "Set default directory to which articles are downloaded.")
-@click.option("--set-bib-file", expose_value = False, callback = set_bib, is_eager = True, help = "Set default bib-file to which BibTeX entries are added.")
+@click.option("--set-directory", expose_value = False, callback = set_download_dir, \
+              is_eager = True, help = "Set default directory to which articles are downloaded.")
+@click.option("--set-bib-file", expose_value = False, callback = set_bib, is_eager = True, \
+              help = "Set default bib-file to which BibTeX entries are added.")
 @click.argument('ax_id')
 @click.pass_context
 def cli(ctx, ax_id):
     """ Script to download, show arXiv articles and create a bibtex entry for them. Version 0.1. """
+    dotenv_file = find_dotenv()
+    load_dotenv(dotenv_file)
     if retrieve.check(ax_id) == False:
         print("Not a correct arXiv identifier. Please try again.")
         ctx.exit()
@@ -60,15 +66,21 @@ def cli(ctx, ax_id):
 
 @cli.command("get")
 @click.option("-o",  "--open-file", is_flag = True, help = "Opens the article after download.")
-@click.option("-dir", "--directory", envvar="DEFAULT_DIRECTORY", help = "Download article to given directory (instead to the default one).")
+# envvar below ensures that the default of 'directory' is the environment
+# variable 'DEFAULT_DIR'.
+@click.option("-dir", "--directory", envvar = "DEFAULT_DIR", \
+              help = "Download article to given directory (instead to the default one).")
+
 @click.pass_context
-def get(ctx, open_file, directory):
+def get(ctx, open_file, directory = os.getenv("DEFAULT_DIR")):
     ''' Download the article corresponding to an arXiv identifier. '''
     article = ctx.obj
     print("\n\"{}\" \nby {} \n".format(article.title, article.authors_short))
-    if directory == "":
-    # TODO: needs to be changed if we rename the script
-        print("Please either set a default download directory by using 'arxiv_script --set-directory PATH'\nor use 'arxiv_script AX_ID get -dir PATH'.")
+    # TODO: if the 'DEFAULT_DIR = ""', then 'directory' seems to be set to None...
+    if directory == "" or directory == None:
+    # NOTE: needs to be changed if we rename the script
+        print("Please either set a default download directory by using 'arxiv_script " +
+              "--set-directory PATH'\nor use 'axs AX_ID get -dir PATH'.")
     elif os.path.isdir(directory) == False:
         print('Please give a valid absolute path to a directory.')
     else:
@@ -80,28 +92,35 @@ def get(ctx, open_file, directory):
             subprocess.call([f"{opener}", saved_path])
 
 @cli.command("show")
-@click.option("-f", "--full", is_flag = True, help = "Shows details of article (including all authors and main subject on arXiv).")
+@click.option("-f", "--full", is_flag = True, help = "Shows details of article " +
+              "(including all authors and main subject on arXiv).")
 @click.pass_context
 def show(ctx, full):
     """ Show title, authors and abstract of an arXiv identifier. """
     article = ctx.obj
     if full == False:
-        print("\nTitle:\n{} \n\nAuthor(s):\n{} \n\nAbstract:\n{}\n".format(article.title, article.authors_short, article.abstract))
+        print("\nTitle:\n{} \n\nAuthor(s):\n{} \n\nAbstract:\n{}\n".format(article.title, article.authors_short, \
+                                                                           article.abstract))
     else:
         print(article)
 
 @cli.command("bib")
-@click.option('-add', '--add-to', envvar="DEFAULT_BIB_FILE", help = "Path to a bib-file to which the BibTeX entry is added.")
+@click.option('-add', '--add-to', envvar = "DEFAULT_BIB_FILE", \
+              help = "Path to a bib-file to which the BibTeX entry is added.")
 @click.pass_context
 def bib(ctx, add_to):
-    ''' Create bibtex entry for an arXiv identifier (optionally add to default or some other bib-file). '''
+    ''' Create bibtex entry for an arXiv identifier
+        (optionally add to default or some other bib-file).
+    '''
     article = ctx.obj
     bib_entry = article.bib()
     print(f"\nHere is the requested BibTeX entry:\n\n{bib_entry}\n")
     ctx.obj = bib_entry
-    if add_to == "":
+    # TODO: again need to treat the 'None case'...
+    if add_to == "" or add_to == None:
         # TODO: needs to be changed if we rename the script
-        print("Note: to add the BibTeX entry to a bib-file either set a default bib-file via 'arxiv_script --set-bib-file FILE PATH'\nor use 'arxiv_script AX_ID bib add -to FILE PATH'.")
+        print("Note: to automatically add the BibTeX entry to a bib-file either set a default bib-file via" +
+              " 'arxiv_script --set-bib-file FILE PATH'\n or use 'arxiv_script AX_ID bib -add FILE PATH'.")
     elif os.path.splitext(add_to)[1] != ".bib":
         print("The given path does not point to a bib-file. Please try again.")
     elif os.path.isfile(add_to) == False:
@@ -109,6 +128,6 @@ def bib(ctx, add_to):
     else:
         bib_entry = ctx.obj
         if click.confirm("Do you want to add this BibTeX entry to {}?".format(os.path.abspath(add_to))):
-            with open(to, 'a') as f:
+            with open(add_to, 'a') as f:
                 f.write("\n{}".format(bib_entry))
                 print("BibTeX entry successfully added.")
