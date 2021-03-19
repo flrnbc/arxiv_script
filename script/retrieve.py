@@ -28,9 +28,14 @@ def get_year(ax_id):
 
 
 def arxiv(ax_id):
-    ''' Ask for arXiv identifier and return corresponding Article class. '''
+    ''' Ask for arXiv identifier and return corresponding Article class
+        or None if arXiv identifier does not exist.
+    '''
     # python 3 truncates leading zeros but these might occur
     # in arxiv identifiers. TODO: check!
+    if not check(ax_id):
+        print("Not a correct arXiv identifier. Please try again.")
+        return None
     ax_id = str(ax_id).zfill(9)
     article_year = get_year(ax_id)
     abs_url = 'https://arxiv.org/abs/{}'.format(ax_id)
