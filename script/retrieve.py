@@ -1,13 +1,14 @@
 """
 Main functions to retrieve the relevant data of the article corresponding
-to the given arXiv identifier. Also helper function to check if arXiv identifier exists.
+to the given arXiv identifier. Also helper function to check if arXiv
+identifier exists.
 """
 
-import script.article as article
-from lxml import html
-import requests
-import os
 import re
+import requests
+from lxml import html
+import script.article as article
+
 
 def get_year(ax_id):
     """ Extract the year from an arXiv identifier (in format YYYY). """
@@ -25,10 +26,11 @@ def get_year(ax_id):
             year = '20' + search_old[2]
     return year
 
+
 def arxiv(ax_id):
     ''' Ask for arXiv identifier and return corresponding Article class. '''
-    # python 3 truncates leading zeros but these might occur in arxiv identifiers
-    # TODO: check!
+    # python 3 truncates leading zeros but these might occur
+    # in arxiv identifiers. TODO: check!
     ax_id = str(ax_id).zfill(9)
     article_year = get_year(ax_id)
     abs_url = 'https://arxiv.org/abs/{}'.format(ax_id)
@@ -48,7 +50,8 @@ def arxiv(ax_id):
         authors_name = ' and '.join(all_authors)
     else:
         authors_name = all_authors[0]
-    # second create a short and 'contracted' authors' name, e.g. to create file name or bibtex key
+    # second create a short and 'contracted' authors' name, e.g.
+    # to create file name or bibtex key
     authors_short_list = [a.split(', ')[0] for a in all_authors[:3]]
     if len(all_authors) > 3:
         authors_short = authors_short_list[0] + ' et al'
@@ -61,11 +64,16 @@ def arxiv(ax_id):
         authors_short = authors_short_list[0]              # TODO: IMPROVE!?!?
         authors_contracted = authors_short
 
-    return article.Article(title = title, authors = authors_name, authors_short = authors_short, authors_contracted = authors_contracted, abstract = abstract, ax_id = ax_id, year = article_year, main_subject = main_subject)
+    return article.Article(title = title, authors = authors_name,
+                           authors_short = authors_short,
+                           authors_contracted = authors_contracted,
+                           abstract = abstract, ax_id = ax_id,
+                           year = article_year, main_subject = main_subject)
+
 
 def check(ax_id):
     ''' Helper function to check if arXiv identifier exists. '''
     abs_url = 'https://arxiv.org/abs/{}'.format(ax_id)
-    r = requests.get(abs_url)
+    req = requests.get(abs_url)
     # check status of request
-    return r.status_code == requests.codes.ok
+    return req.status_code == requests.codes.ok
