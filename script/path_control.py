@@ -6,13 +6,33 @@ for opening a downloaded file.
 
 import platform
 import os
+from dotenv import load_dotenv, set_key, find_dotenv
 
 
 def check_path(path, path_type):
-    if path_type == "directory":
+    if path_type == "DEFAULT_DIRECTORY":
         return os.path.isdir(path)
-    elif path_type == "file":
-        return os.path.isfile(path)
+    elif path_type == "DEFAULT_BIB_FILE":
+        return (os.path.splitext(path)[1] == ".bib")
+
+
+def set_default(path, path_type):
+    """ 
+    Set default directory (path_type = 'DEFAULT_DIRECTORY')
+    or default bib file (path_type = 'DEFAULT_BIB_FILE').
+    """
+    if not check_path(path = path, path_type = path_type): 
+        print("Not a correct path. Please try again.")
+    else: 
+        # load .env-file for environment variables
+        dotenv_file = find_dotenv()
+        load_dotenv(dotenv_file)
+        # set the environment variable (= path_type)
+        set_key(dotenv_file, path_type, path)
+        # for better printing
+        env_var_print = path_type.replace("_", " ")
+
+        print("New {} has been set.".format(env_var_print.lower()))
 
 
 def get_opener():
