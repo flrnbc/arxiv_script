@@ -39,6 +39,10 @@ def set_default(path, path_type):
 
         print("New {} has been set.".format(env_var_print.lower()))
 
+############################################
+## test does NOT WORK because environment ##
+## variables are not instantly updated.   ##
+############################################
 
 def test_set_default(): 
     dotenv_file = find_dotenv()
