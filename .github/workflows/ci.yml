@@ -1,0 +1,26 @@
+name: CI
+
+on: push
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    container: python:3.8-buster
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Installing Dependencies
+        run: |
+          pip install -r reqs/linting.txt
+      - name: Formatting
+        run: |
+          black --check src
+          isort --profile black --check-only src
+      - name: Linting
+        run: |
+          pylint src
+          flake8 src
+      - name: Type Checking
+        run: |
+          mypy src
