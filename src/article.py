@@ -13,22 +13,22 @@ def escape_special_chars(string, special_chars):
     """ Escape special characters via adding backslash. """
     escape_string = string
     for ss in special_chars:
-        escape_string = re.sub(ss, '\\' + ss, escape_string)
+        # note that we need to escape the backslash
+        escape_string = re.sub(ss, "\\" + ss, escape_string)
     return escape_string
 
 
-def delete_words(string, to_delete, case_sensitive = True):
+def delete_prepositions(string, to_delete, case_sensitive=True):
     """
-    Delete a list of words from given string. If case_sensitive is False,
-    ignore if words in to_delete are captialized or not.
+    Delete a list of prepositions or articles from given string. 
+    If case_sensitive is False, ignore if words in to_delete are 
+    captialized or not.
     """
-    # NOTE: I couldn't find a way to remove e.g. the article 'a' from a string
-    # with regex. For example, re.sub(r'a\b', '', str) also replaces 'a' at the
-    # end of a word...
-    # NOTE however: it doesn't catch the words if they are followed e.g. by a
-    # comma. In practise, this should not be a problem though.
+    # NOTE: it doesn't words in to_delete if they are followed e.g. by a
+    # comma. In practise, this is not a problem because preposition or articles
+    # are always surrounded by 
     split_string = string.split()
-    if case_sensitive is False:
+    if not case_sensitive:
         to_delete_caps = [w.capitalize() for w in to_delete]
         to_delete += to_delete_caps
     for w in to_delete:
@@ -40,7 +40,7 @@ def delete_words(string, to_delete, case_sensitive = True):
 def bib_title(string):
     """
     Helper function to create correct title for bibtex, i.e. curly braces around
-    captial words to actually print them in captial and escaping special
+    capital words to actually print them in captial and escaping special
     characters.
     """
     caps = re.compile("[A-Z]")
@@ -123,10 +123,11 @@ class Article:
         # key for title
         ## remove most common propositions and articles
         to_remove = ['a', 'and', 'in', 'of', 'on', 'or', 'the', 'for']
-        title_key = delete_words(self.title, to_remove, case_sensitive = False)
-        print(title_key)
+        title_key = delete_prepositions(self.title, to_remove, case_sensitive = False)
+        #print(title_key)
         ## remove characters which are not allowed/unnecessary in bibtex key
         remove_chars = re.compile(r'[\\{},~#%:"]')
+        title_key = re.sub(remove_chars, "", title_key)
         title_key_split = title_key.split()
         title_key = ''.join(t.capitalize() for t in title_key_split[:3])
         # TODO: add arxiv identifier only to make key unique; better way?

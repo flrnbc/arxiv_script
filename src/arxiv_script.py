@@ -75,7 +75,7 @@ def get(ax_id, open_file, directory):
                   + "'axs --set-directory PATH'\n" +
                   "or use 'axs AX_ID get -d PATH'.")
         elif os.path.isdir(directory) is False:
-            print('Please give a valid absolute path to a directory.')
+            print("Please give a valid absolute path to a directory.")
         else:
             # download article and show the download path
             saved_path = os.path.abspath(article.download(save_dir = directory))
@@ -118,8 +118,6 @@ def bib(ax_id, add_to):
                   + "\nor use 'axs AX_ID bib -a FILE PATH'.")
         elif os.path.splitext(add_to)[1] != ".bib":
             print("The given path does not point to a bib-file. Please try again.")
-        elif not os.path.isfile(add_to):
-            print("The given path is not a valid one. Please try again.")
         else:
             if click.confirm("Do you want to add this BibTeX entry to {}?". 
                              format(os.path.abspath(add_to))):
