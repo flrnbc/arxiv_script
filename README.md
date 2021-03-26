@@ -1,5 +1,5 @@
-# arXiv-script v0.1
-The [arXiv](www.arxiv.org) is the most important open-access repository for preprints in various sciences, e.g. Computer Science, Mathematics and Physics. Each preprint has its unique [arXiv identifier](https://arxiv.org/help/arxiv_identifier) (often called arXiv number). The _arXiv script_ (`axs`) is a simple command line tool to interact with the preprint of an arXiv identifier:
+# arXiv-script v0.2
+The [arXiv](www.arxiv.org) is the most important open-access repository for preprints in various sciences, e.g. Computer Science, Mathematics and Physics. Each preprint has its unique [arXiv identifier](https://arxiv.org/help/arxiv_identifier) (often called arXiv number). The _arXiv script_ (`axs`) is a minimal command line tool to interact with the preprint of an arXiv identifier:
 
 - `show` print its title, authors and abstract to the terminal.
 - `get` download the preprint and save it with a uniform file name.
@@ -8,14 +8,14 @@ The [arXiv](www.arxiv.org) is the most important open-access repository for prep
 ## example
 Given the arXiv identifier `math/0211159`, let's see what we can do with it (after the installation which is explained below). Let's take a look at the preprint via
 ```bash
-axs math/0211159 show
+axs show math/0211159 
 ```
 This command prints the title, author(s), abstract and arXiv subject to the terminal. If we like the article, simply change `show` to `get` in the above command.
 Then the article is downloaded (to the default directory, see below) in the convenient formate `AUTHOR(S)-TITLE-YEAR.pdf`. In this example:
 ```bash
 Perelman-The_entropy_formula_for_the_Ricci_flow_and_its_geometric_applications-2002.pdf
 ```
-If we decide to cite this preprint in some LaTeX document using BibTeX, simply modify the command to `axs math/0211159 bib`.
+If we decide to cite this preprint in some LaTeX document using BibTeX, simply modify the command to `axs bib math/0211159`.
 This yields the following BibTeX-entry:
 ```
 @article{Perelman-EntropyFormulaFor-math/0211159,
@@ -40,6 +40,8 @@ virtualenv venv
 ```bash
 pip install --editable .
 ```
+This also installs the required packages. We will soon release the _axs_ on _pypi_ making the installation easier. 
+
 **NOTE:** In the following we will run all our commands in this virtual environment.
 
 ## setup
@@ -56,9 +58,9 @@ Here PATH_TO_FILE is our chosen default .bib-file where our BibTeX-entries will 
 ## the commands in detail
 The basic usage is the following
 ```bash
-axs ax_id cmd flag
+axs cmd flag ax_id  
 ```
-where `ax_id` is an arXiv identifier, `cmd` one of the commands below and `flag` is an (optional) flag. In fact, you can combine several flags.
+where `cmd` one of the commands below, `flag` is an (optional) flag and `ax_id` is an arXiv identifier. In fact, you can combine several flags.
 
 The flag `--help` provides help for each command. Note that `axs --help` gives quick general help.
 
@@ -73,7 +75,7 @@ Simply downloads the article to your default directory (if it was already set as
 
 Before the download, the title and author(s) are printed to the terminal and there is a short countdown so that we can still cancel if we accidentally entered the wrong arXiv identifier.
 
-With the flag `-dir` (or `--directory`) we can download the article to another directory, i.e.
+With the flag `-d` (or `--directory`) we can download the article to another directory, i.e.
 ```bash
 axs ax_id get -dir PATH_TO_DIR
 ```
@@ -81,7 +83,7 @@ downloads the article to the directory at PATH_TO_DIR.
 The flag `-o` (or `--open`) opens the preprint after the download.
 
 ### `bib`
-Prints a BibTeX-entry of the article to the terminal and asks if it should be added to our default .bib-file (if it has been set before). Alternatively, use the flag `-add` (or `--add-to`) combined with the path to another .bib-file to which we want to add the BibTeX-entry. Note that at the moment, the BibTeX-entry is simply added to the end of the corresponding .bib-file, so it is _not_ (yet) sorted e.g. alphabetically.
+Prints a BibTeX-entry of the article to the terminal and asks if it should be added to our default .bib-file (if it has been set before). Alternatively, use the flag `-a` (or `--add-to`) combined with the path to another .bib-file to which we want to add the BibTeX-entry. Note that at the moment, the BibTeX-entry is simply added to the end of the corresponding .bib-file, so it is _not_ (yet) sorted e.g. alphabetically.
 
 Three comments on the BibTeX-entry:
 + The BibTeX-key, which is used to cite the preprint in a LaTeX document (`Perelman-EntropyFormulaFor-math/0211159` in our example above), is created is in the formate `AUTHOR(S)-SHORT_TITLE-AX_ID` where
@@ -103,3 +105,7 @@ Even though there are great tools to manage scientific articles (e.g. Mendeley o
 Since I was not that satisfied with the available common BibTeX-entries of arXiv articles, I've automated them myself.
 
 Altogether I hope that this script is useful for others as well who prefer a minimalistic management of (arXiv) articles.
+
+## main changes from v0.1 to v0.2
++ In v0.1 the syntax was quite unconventional (`axs AX_ID CMD` instead of `axs CMD AX_ID`).
++ BUG FIX: The _axs_ now works 'anywhere' in the terminal not just in its directory. To do so, we now use use environment variables (via the dotenv package to make them last) to store the default directory and bib-file. Thanks @r-raymond! 
