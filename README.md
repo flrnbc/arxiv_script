@@ -28,7 +28,7 @@ This yields the following BibTeX-entry:
 We are then asked if we want to automatically add this entry to our (default) .bib-file enabling us to cite the preprint in LaTeX right away.
 
 ## installation
-At this stage, the _axs_ is still under development. Hence we require Python (preferably =>3.0) and pip for its installation. It is also recommended to install it in a virtual environment. With these requirements in place, do the follwing:
+At this stage, the _axs_ is still under development. Hence we require Python (=>3.6) and pip for its installation. It is also recommended to install it in a virtual environment. With these requirements in place, do the follwing:
 
 - Pull this repository to your preferred directory via `git` or simply download all files.
 - In the terminal, change to the directory where you downloaded this repository to. Then create a new virtual environment, e.g. with the name `venv`, and activate it:
