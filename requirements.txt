@@ -1,0 +1,12 @@
+-e git+https://github.com/flrnbc/arxiv_script.git@6100fa236655379eefd685c7e198f09e611465f9#egg=axs
+certifi==2020.12.5
+chardet==4.0.0
+click==7.1.2
+docopt==0.6.2
+idna==2.10
+lxml==4.6.3
+pipreqs==0.4.10
+python-dotenv==0.15.0
+requests==2.25.1
+urllib3==1.26.4
+yarg==0.1.9
