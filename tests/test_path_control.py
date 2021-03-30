@@ -6,13 +6,16 @@ from src.path_control import check_path
 
 
 def test_check_path():
-    assert check_path("./test_directory", "DEFAULT_DIRECTORY")
-    assert not check_path ("./test_directory2", "DEFAULT_DIRECTORY")
+    test_dir = os.getcwd() + "/tests/test_directory"
+    test_bib = test_dir + "/test.bib"
+    test_article = os.getcwd() + "/test_article.py"
+    assert check_path(test_dir, "DEFAULT_DIRECTORY")
+    assert not check_path(test_bib, "DEFAULT_DIRECTORY")
     assert not check_path("/nothing/is/here", "DEFAULT_DIRECTORY")
 
-    assert not check_path("./test_directory", "DEFAULT_BIB_FILE")
-    assert check_path("./test.bib", "DEFAULT_BIB_FILE")
-    assert not check_path("./test_article.py", "DEFAULT_BIB_FILE")
+    assert check_path(test_bib, "DEFAULT_BIB_FILE")
+    assert not check_path(test_dir, "DEFAULT_BIB_FILE")
+    assert not check_path(test_article, "DEFAULT_BIB_FILE")
 
 
 # Copied set_default to avoid complications with the two different .env-files
