@@ -17,13 +17,13 @@ def check_path(path, path_type):
 
 
 def set_default(path, path_type):
-    """ 
+    """
     Set default directory (path_type = 'DEFAULT_DIRECTORY')
     or default bib file (path_type = 'DEFAULT_BIB_FILE').
     """
-    if not check_path(path = path, path_type = path_type): 
+    if not check_path(path = path, path_type = path_type):
         print("Not a correct path. Please try again.")
-    else: 
+    else:
         # load .env-file for environment variables
         dotenv_file = find_dotenv()
         load_dotenv(dotenv_file)
