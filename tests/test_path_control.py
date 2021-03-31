@@ -39,8 +39,8 @@ def set_default(path, path_type):
         print("New {} has been set.".format(env_var_print.lower()))
 
 ############################################
-## test does NOT WORK because environment ##
-## variables are not instantly updated.   ##
+# test does NOT WORK because environment ##
+# variables are not instantly updated.   ##
 ############################################
 
 # def test_set_default():
@@ -54,7 +54,8 @@ def set_default(path, path_type):
 #     set_default("/Users/fbeck/Docs/", "DEFAULT_DIRECTORY")
 #     assert os.getenv("DEFAULT_DIRECTORY") == "/Users/fbeck/Documents/"
 
-#     test_bib = "Users/fbeck/Documents/Rise/python/arxiv_script/tests/test.bib"
+#     test_bib = "Users/fbeck/Documents/Rise/python/arxiv_script/" +
+#                "tests/test.bib"
 #     set_default(test_bib, "DEFAULT_BIB_FILE")
 #     assert os.getenv("DEFAULT_BIB_FILE") == test_bib
 

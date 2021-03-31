@@ -11,14 +11,12 @@ def test_get_year():
 
 
 def test_check():
-    assert check("2011:01212") == False
-    assert check("math.GT/0309136") == True
-    assert check("cmp-lg/9404002") == True
-    assert check("9308.12301") == False
+    assert not check("2011:01212")
+    assert check("math.GT/0309136")
+    assert check("cmp-lg/9404002")
+    assert not check("9308.12301")
 
 
 def test_arxiv():
     # check if arxiv prints correctly (use -s flag in pytest)
     print(arxiv("math.GT/0309136"))
-
-
