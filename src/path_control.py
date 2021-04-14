@@ -31,7 +31,9 @@ def set_default(path, path_type):
         # load .env-file for environment variables
         dotenv_file = find_dotenv()
         load_dotenv(dotenv_file)
-        # set the environment variable (= path_type)
+        # set the environment variable (= path_type) (in current session)
+        os.environ[path_type] = path
+        # set it in the dot-file (performed only after the session)
         set_key(dotenv_file, path_type, path)
         # for better printing
         env_var_print = path_type.replace("_", " ")
