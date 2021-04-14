@@ -1,7 +1,7 @@
 """ Testing path_control.py """
 
 import os
-from dotenv import load_dotenv, find_dotenv, set_key
+from dotenv import load_dotenv, set_key
 from src.path_control import check_path, set_default
 
 
@@ -26,11 +26,6 @@ def test_check_path():
     assert not check_path(test_article, "DEFAULT_BIB_FILE")
 
 
-#def test_env_file():
-#    assert os.environ["DEFAULT_DIRECTORY"] == ""
-#    assert os.environ["DEFAULT_BIB_FILE"] == ""
-
-
 def test_set_default():
     current_default_dir = os.getenv("DEFAULT_DIRECTORY")
     current_default_bib_file = os.getenv("DEFAULT_BIB_FILE")
@@ -53,4 +48,3 @@ def test_set_default():
     # reset .env-file (for next session)
     set_key(dotenv_file, "DEFAULT_DIRECTORY", current_default_dir)
     set_key(dotenv_file, "DEFAULT_BIB_FILE", current_default_bib_file)
-    
