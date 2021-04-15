@@ -18,5 +18,22 @@ def test_check():
 
 
 def test_arxiv():
+    # check non-existent arxiv identifier
+    assert not arxiv("fantasy_ax_id")
+
+    # check existent arxiv identifier
+    article = arxiv("math.GT/0309136")
+    assert article.title == "Regular points in affine Springer fibers"
+    assert article.authors_contracted == "GoreskyKottwitzMacPherson"
     # check if arxiv prints correctly (use -s flag in pytest)
     print(arxiv("math.GT/0309136"))
+
+    # now we check if authors are correctly displayed
+    # depending on the number of authors:
+    # for one authors
+    article2 = arxiv("math/0211159")
+    assert article2.authors == "Perelman, Grisha"
+
+    # for > 3 authors
+    article3 = arxiv("2104.06383")
+    assert article3.authors_contracted == "MarcolongoEtAl"
