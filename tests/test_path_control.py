@@ -2,7 +2,7 @@
 
 import os
 from dotenv import load_dotenv, set_key
-from src.path_control import check_path, set_default
+from src.path_control import check_path, set_default, get_opener
 
 
 # directory/file paths needed for testing
@@ -24,6 +24,7 @@ def test_check_path():
     assert check_path(test_bib, "DEFAULT_BIB_FILE")
     assert not check_path(test_dir, "DEFAULT_BIB_FILE")
     assert not check_path(test_article, "DEFAULT_BIB_FILE")
+    assert not check_path('fantasy.bib', "DEFAULT_BIB_FILE")
 
 
 def test_set_default():
@@ -48,3 +49,8 @@ def test_set_default():
     # reset .env-file (for next session)
     set_key(dotenv_file, "DEFAULT_DIRECTORY", current_default_dir)
     set_key(dotenv_file, "DEFAULT_BIB_FILE", current_default_bib_file)
+
+
+def test_get_opener():
+    opener = get_opener()
+    assert opener in ["start", "open", "xdg-open"]
