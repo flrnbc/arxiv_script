@@ -14,8 +14,9 @@ import src.retrieve as retrieve
 
 
 # callback functions to set default download directory and bib file.
-def set_download_dir(ctx, directory):
-    """Set default directory where articles are downloaded to."""
+def set_download_dir(ctx, param, directory):
+    """Set default directory where articles are downloaded to.
+    Note: 'param' is not used here but required by Click."""
     # the following ensures that the parameters for --set-directory
     # are passed to this function
     if not directory or ctx.resilient_parsing:
@@ -24,8 +25,9 @@ def set_download_dir(ctx, directory):
     ctx.exit()
 
 
-def set_bib(ctx, bib_file):
-    """Set default bib-file to which BibTeX-entries are added."""
+def set_bib(ctx, param, bib_file):
+    """Set default bib-file to which BibTeX-entries are added.
+    Again, param is not used here but required by Click."""
     if not bib_file or ctx.resilient_parsing:
         return
     set_default(path=bib_file, path_type="DEFAULT_BIB_FILE")
@@ -141,8 +143,9 @@ def bib(ax_id, add_to):
                 + " --set-bib-file FILE PATH'"
                 + "\nor use 'axs AX_ID bib -a FILE PATH'."
             )
-        elif os.path.splitext(add_to)[1] != ".bib":
-            print("The given path does not point to a bib-file." +
+        elif (not os.path.isfile(add_to)
+              or os.path.splitext(add_to)[1] != ".bib"):
+            print("The given path does not point to a bib-file. " +
                   "Please try again.")
         else:
             if click.confirm(

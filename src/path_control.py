@@ -18,7 +18,7 @@ def check_path(path, path_type):
     if path_type == "DEFAULT_DIRECTORY":
         return os.path.isdir(path)
     if path_type == "DEFAULT_BIB_FILE":
-        return os.path.splitext(path)[1] == ".bib"
+        return (os.path.isfile(path) and os.path.splitext(path)[1] == ".bib")
 
 
 def set_default(path, path_type):
