@@ -58,7 +58,7 @@ def test_bib_file(tmp_path):
     tmp_bib = axs_tmp / "tmp.bib"
     tmp_bib.touch()
 
-    # invoke 'axs bib' 
+    # invoke 'axs bib'
     runner = CliRunner()
     # without adding the bibtex key to tmp_bib (input = 'n')
     result_tmp_bib = runner.invoke(cli,
@@ -66,10 +66,9 @@ def test_bib_file(tmp_path):
                                     'math.GT/0309136'],
                                    input="n")
     # adding the to tmp_bib
-    result_tmp_write = runner.invoke(cli,
-                                   ['bib', '-a', str(tmp_bib),
-                                    'math.GT/0309136'],
-                                   input="y")
+    result_tmp_write = runner.invoke(cli, ['bib', '-a', str(tmp_bib),
+                                     'math.GT/0309136'],
+                                     input="y")
 
     # actual tests
     assert result_tmp_bib.exit_code == 0
@@ -82,6 +81,3 @@ def test_bib_file(tmp_path):
     with tmp_bib.open() as bib_file:
         first_line = bib_file.readline()
         assert "math.GT/0309136" in first_line
-
-
-
