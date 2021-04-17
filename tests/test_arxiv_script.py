@@ -38,6 +38,7 @@ def test_get():
 
 
 def test_bib():
+    """Just test axs bib without interacting with an actual file."""
     runner = CliRunner()
     result_false_bib = runner.invoke(cli, ['bib', '-a', 'fantasy.bib',
                                            'math.GT/0309136'])
@@ -48,3 +49,39 @@ def test_bib():
             in result_false_bib.output)
     assert result_bib.exit_code == 0
     assert "Here is the requested BibTeX entry:" in result_bib.output
+
+
+def test_bib_file(tmp_path):
+    # create a temporary bib-file
+    axs_tmp = tmp_path / "axs_tmp"
+    axs_tmp.mkdir()
+    tmp_bib = axs_tmp / "tmp.bib"
+    tmp_bib.touch()
+
+    # invoke 'axs bib' 
+    runner = CliRunner()
+    # without adding the bibtex key to tmp_bib (input = 'n')
+    result_tmp_bib = runner.invoke(cli,
+                                   ['bib', '-a', str(tmp_bib),
+                                    'math.GT/0309136'],
+                                   input="n")
+    # adding the to tmp_bib
+    result_tmp_write = runner.invoke(cli,
+                                   ['bib', '-a', str(tmp_bib),
+                                    'math.GT/0309136'],
+                                   input="y")
+
+    # actual tests
+    assert result_tmp_bib.exit_code == 0
+    assert result_tmp_write.exit_code == 0
+    # check output
+    assert "Do you want to add this BibTeX entry" in result_tmp_bib.output
+    assert "BibTeX entry successfully added." in result_tmp_write.output
+    # check if writing to tmp_bib was successful (if so, the arXiv identifier
+    # is in the first line)
+    with tmp_bib.open() as bib_file:
+        first_line = bib_file.readline()
+        assert "math.GT/0309136" in first_line
+
+
+
