@@ -1,6 +1,7 @@
 """ Test article.py """
 
-from src.retrieve import get_year
+import os
+from src.retrieve import get_year, arxiv
 import src.article as sa
 
 
@@ -65,3 +66,18 @@ def test_article_class():
                  ).format(bib_key, authors, bib_title, year, url, ax_id)
 
     assert test_class.bib() == bib_entry
+
+    
+def test_download(tmp_path):
+    """Test download of an article."""
+    # create temporary directory for download
+    axs_tmp = tmp_path / "axs_tmp"
+    axs_tmp.mkdir()
+    # get absolute path
+    axs_tmp_abs = axs_tmp.resolve()
+    # get an arXiv article
+    article = arxiv("math.GT/0309136")
+    # download article (also returns download path)
+    file_path = article.download(str(axs_tmp_abs)) 
+
+    assert os.path.isfile(file_path)
