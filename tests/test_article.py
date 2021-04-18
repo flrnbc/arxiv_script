@@ -67,7 +67,7 @@ def test_article_class():
 
     assert test_class.bib() == bib_entry
 
-    
+
 def test_download(tmp_path):
     """Test download of an article."""
     # create temporary directory for download
@@ -78,6 +78,6 @@ def test_download(tmp_path):
     # get an arXiv article
     article = arxiv("math.GT/0309136")
     # download article (also returns download path)
-    file_path = article.download(str(axs_tmp_abs)) 
+    file_path = article.download(str(axs_tmp_abs))
 
     assert os.path.isfile(file_path)
