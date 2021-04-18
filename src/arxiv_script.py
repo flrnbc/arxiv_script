@@ -13,6 +13,13 @@ from src.path_control import set_default, get_opener
 import src.retrieve as retrieve
 
 
+# load environment variables from local .env-file
+# also used for help to show the default directory/bib file.
+# hence we already load it here.
+dotenv_file = find_dotenv()
+load_dotenv(dotenv_file)
+
+
 # callback functions to set default download directory and bib file.
 def set_download_dir(ctx, param, directory):
     """Set default directory where articles are downloaded to.
@@ -43,22 +50,21 @@ def set_bib(ctx, param, bib_file):
     expose_value=False,
     callback=set_download_dir,
     is_eager=True,
-    help="Set default directory to which articles are downloaded.",
+    help="Set default directory to which articles are downloaded." +
+    "\nDefault: {}".format(os.getenv("DEFAULT_DIRECTORY")),
 )
 @click.option(
     "--set-bib-file",
     expose_value=False,
     callback=set_bib,
     is_eager=True,
-    help="Set default bib-file to which BibTeX entries are added.",
+    help="Set default bib-file to which BibTeX entries are added." +
+    "\nDefault: {}".format(os.environ["DEFAULT_BIB_FILE"]),
 )
 def cli():
     """Script to download & show arXiv articles and create a bibtex entry
     for them. Version 0.1.
     """
-    # load environment variables from local .env-file
-    dotenv_file = find_dotenv()
-    load_dotenv(dotenv_file)
 
 
 @cli.command("get")
@@ -154,5 +160,5 @@ def bib(ax_id, add_to):
                 )
             ):
                 with open(add_to, "a") as file:
-                    file.write("\n{}".format(bib_entry))
+                    file.write("{}".format(bib_entry))
                     print("BibTeX entry successfully added.")
