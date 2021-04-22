@@ -4,9 +4,10 @@ as directory or file. Another helper function
 for opening a downloaded file.
 """
 
-import platform
 import os
-from dotenv import load_dotenv, set_key, find_dotenv
+import platform
+
+from dotenv import find_dotenv, load_dotenv, set_key
 
 
 def check_path(path, path_type):
@@ -18,7 +19,7 @@ def check_path(path, path_type):
     if path_type == "DEFAULT_DIRECTORY":
         return os.path.isdir(path)
     if path_type == "DEFAULT_BIB_FILE":
-        return (os.path.isfile(path) and os.path.splitext(path)[1] == ".bib")
+        return os.path.isfile(path) and os.path.splitext(path)[1] == ".bib"
 
 
 def set_default(path, path_type):

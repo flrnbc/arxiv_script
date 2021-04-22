@@ -7,11 +7,12 @@ functions).
 
 import os
 import subprocess
+
 import click
 from dotenv import find_dotenv, load_dotenv
-from src.path_control import set_default, get_opener
-import src.retrieve as retrieve
 
+import src.retrieve as retrieve
+from src.path_control import get_opener, set_default
 
 # load environment variables from local .env-file
 # also used for help to show the default directory/bib file.
@@ -50,20 +51,20 @@ def set_bib(ctx, param, bib_file):
     expose_value=False,
     callback=set_download_dir,
     is_eager=True,
-    help="Set default directory to which articles are downloaded." +
-    "\nDefault: {}".format(os.getenv("DEFAULT_DIRECTORY")),
+    help="Set default directory to which articles are downloaded."
+    + "\nDefault: {}".format(os.getenv("DEFAULT_DIRECTORY")),
 )
 @click.option(
     "--set-bib-file",
     expose_value=False,
     callback=set_bib,
     is_eager=True,
-    help="Set default bib-file to which BibTeX entries are added." +
-    "\nDefault: {}".format(os.environ["DEFAULT_BIB_FILE"]),
+    help="Set default bib-file to which BibTeX entries are added."
+    + "\nDefault: {}".format(os.environ["DEFAULT_BIB_FILE"]),
 )
 def cli():
     """Script to download & show arXiv articles and create a bibtex entry
-    for them. Version 0.1.
+    for them. Version 0.2.
     """
 
 
@@ -77,8 +78,7 @@ def cli():
     "-d",
     "--directory",
     envvar="DEFAULT_DIRECTORY",
-    help="Download article to given directory"
-    + "(instead to the default one).",
+    help="Download article to given directory" + "(instead to the default one).",
 )
 @click.argument("ax_id")
 def get(ax_id, open_file, directory):
@@ -149,10 +149,8 @@ def bib(ax_id, add_to):
                 + " --set-bib-file FILE PATH'"
                 + "\nor use 'axs AX_ID bib -a FILE PATH'."
             )
-        elif (not os.path.isfile(add_to)
-              or os.path.splitext(add_to)[1] != ".bib"):
-            print("The given path does not point to a bib-file. " +
-                  "Please try again.")
+        elif not os.path.isfile(add_to) or os.path.splitext(add_to)[1] != ".bib":
+            print("The given path does not point to a bib-file. " + "Please try again.")
         else:
             if click.confirm(
                 "Do you want to add this BibTeX entry to {}?".format(

@@ -2,8 +2,9 @@
 its basic functionality (e.g. download and bibtex-entry).
 """
 
-import time
 import re
+import time
+
 import requests
 
 
@@ -13,9 +14,7 @@ def escape_special_chars(string, special_chars):
     escape_string = string
     for special_char in special_chars:
         # note that we need to escape the backslash
-        escape_string = re.sub(special_char,
-                               "\\" + special_char,
-                               escape_string)
+        escape_string = re.sub(special_char, "\\" + special_char, escape_string)
     return escape_string
 
 
@@ -134,10 +133,7 @@ class Article:
         # key for title
         # remove most common propositions and articles
         to_remove = ["a", "and", "in", "of", "on", "or", "the", "for"]
-        title_key = delete_prepositions(
-            self.title,
-            to_remove,
-            case_sensitive=False)
+        title_key = delete_prepositions(self.title, to_remove, case_sensitive=False)
         # print(title_key)
         # remove characters which are not allowed/unnecessary in bibtex key
         remove_chars = re.compile(r'[\\{},~#%:"]')
