@@ -1,9 +1,10 @@
 """ Testing path_control.py """
 
 import os
-from dotenv import load_dotenv, set_key
-from src.path_control import check_path, set_default, get_opener
 
+from dotenv import load_dotenv, set_key
+
+from src.path_control import check_path, get_opener, set_default
 
 # directory/file paths needed for testing
 working_dir = os.getcwd()
@@ -24,7 +25,7 @@ def test_check_path():
     assert check_path(test_bib, "DEFAULT_BIB_FILE")
     assert not check_path(test_dir, "DEFAULT_BIB_FILE")
     assert not check_path(test_article, "DEFAULT_BIB_FILE")
-    assert not check_path('fantasy.bib', "DEFAULT_BIB_FILE")
+    assert not check_path("fantasy.bib", "DEFAULT_BIB_FILE")
 
 
 def test_set_default():

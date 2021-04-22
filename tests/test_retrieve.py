@@ -1,6 +1,6 @@
 """ Short tests for retrieve.py """
 
-from src.retrieve import get_year, arxiv, check
+from src.retrieve import arxiv, check, get_year
 
 
 def test_get_year():

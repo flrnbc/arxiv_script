@@ -1,8 +1,9 @@
 """ Test article.py """
 
 import os
-from src.retrieve import get_year, arxiv
+
 import src.article as sa
+from src.retrieve import arxiv, get_year
 
 
 def test_escape_special_chars():
@@ -16,15 +17,16 @@ def test_delete_prepositions():
     test2 = "Here The is capital."
     remove = ["a", "the", "to"]
     assert sa.delete_prepositions(test1, remove) == "Hello, cow goes store."
-    assert sa.delete_prepositions(test2,
-                                  remove,
-                                  case_sensitive=False) == "Here is capital."
+    assert (
+        sa.delete_prepositions(test2, remove, case_sensitive=False)
+        == "Here is capital."
+    )
 
 
 def test_bib_title():
-    title1 = 'The fundamental Laws of the Universe'
-    title2 = 'The $N=2$ of QFT'
-    title3 = 'All elements of {1, 2} are natural'
+    title1 = "The fundamental Laws of the Universe"
+    title2 = "The $N=2$ of QFT"
+    title3 = "All elements of {1, 2} are natural"
     assert sa.bib_title(title1) == "{The} fundamental {Laws} of the {Universe}"
     assert sa.bib_title(title2) == "{The} {$N=2$} of {QFT}"
     assert sa.bib_title(title3) == "{All} elements of \\{1, 2\\} are natural"
@@ -40,9 +42,16 @@ def test_article_class():
     year = get_year(ax_id)
     main_subject = "Coolest subject ever!"
 
-    test_class = sa.Article(title, authors, authors_short,
-                            authors_contracted, abstract,
-                            ax_id, year, main_subject)
+    test_class = sa.Article(
+        title,
+        authors,
+        authors_short,
+        authors_contracted,
+        abstract,
+        ax_id,
+        year,
+        main_subject,
+    )
 
     assert test_class.title == title
     assert test_class.authors == authors
@@ -53,17 +62,19 @@ def test_article_class():
     assert test_class.year == year
     assert test_class.main_subject == main_subject
 
-    assert test_class.bib_key() == ("TheFirstTheSecondTheThird-NewArticle"
-                                    "-2525.10000")
+    assert test_class.bib_key() == (
+        "TheFirstTheSecondTheThird-NewArticle" "-2525.10000"
+    )
     bib_key = test_class.bib_key()
     assert sa.bib_title(title) == "{New} article"
     bib_title = sa.bib_title(title)
 
     url = "https://arxiv.org/abs/{}".format(ax_id)
-    bib_entry = ("@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},"
-                 "\n\tYear = {{{3}}},"
-                 "\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}"
-                 ).format(bib_key, authors, bib_title, year, url, ax_id)
+    bib_entry = (
+        "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},"
+        "\n\tYear = {{{3}}},"
+        "\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}"
+    ).format(bib_key, authors, bib_title, year, url, ax_id)
 
     assert test_class.bib() == bib_entry
 
