@@ -6,15 +6,44 @@ authors = ["Florian Beck <flrn.beck@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.6, <4"
+python = ">=3.6.1, <4" # >=3.6.1 to work with pre-commit
 requests = "^2.25.1"
 urllib3 = ">=1.23" # if not used, pytest gives a DeprecationWarning
 click = "^7.1.2"
 python-dotenv = "^0.17.0"
 lxml = "^4.6.3"
+pre-commit = "^2.12.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
+
+[tool.black]
+target_version = ['py36', 'py37', 'py38']
+exclude = '''
+(
+	/(
+	  	\.eggs
+	  |	\.git
+	  | \.github
+	  | \.pytest_cache
+	  |	build
+	  | dist
+	)/
+)
+'''
+# compatibility with isort
+multi_line_output = 3
+include_trailing_comma = true
+use_parentheses = true
+force_grid_wrap = 0
+ensure_newline_before_comments = true
+
+[tool.pylint.messages_control]
+# for Pylint's compatibility with Black
+disable = "C0330, C0326"
+# C0330: Wrong hanging indentation before block
+# C0326: Bad whitespace (because Black adds whitespace
+# around operators and brackets)
 
 [build-system]
 requires = [
