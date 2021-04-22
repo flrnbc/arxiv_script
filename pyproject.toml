@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "arxiv-script"
+version = "0.2.0"
+description = "Command line tool to handle arXiv articles and their BibTeX entries."
+authors = ["Florian Beck <flrn.beck@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.6, <4"
+requests = "^2.25.1"
+urllib3 = ">=1.23" # if not used, pytest gives a DeprecationWarning
+click = "^7.1.2"
+python-dotenv = "^0.17.0"
+lxml = "^4.6.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "*"
+
+[build-system]
+requires = [
+	"poetry-core>=1.0.0",
+	"setuptools!=50.0", 
+	"wheel",
+	]
+build-backend = "poetry.core.masonry.api"
