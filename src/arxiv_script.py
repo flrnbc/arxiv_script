@@ -150,7 +150,7 @@ def bib(ax_id, add_to):
                 + "\nor use 'axs AX_ID bib -a FILE PATH'."
             )
         elif not os.path.isfile(add_to) or os.path.splitext(add_to)[1] != ".bib":
-            print("The given path does not point to a bib-file. " + "Please try again.")
+            print("The given path does not point to a bib-file. Please try again.")
         else:
             if click.confirm(
                 "Do you want to add this BibTeX entry to {}?".format(
