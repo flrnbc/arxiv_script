@@ -1,5 +1,4 @@
-"""
-Main code for the script mainly using Click
+"""Main code for the script mainly using Click
 (see https://palletsprojects.com/p/click/
 for details, in particular on the use of callback
 functions).
