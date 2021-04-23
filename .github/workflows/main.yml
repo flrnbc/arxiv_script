@@ -28,7 +28,7 @@ jobs:
         pip install -r requirements.txt
     - name: Install package
       run: |
-        pip install --editable .
+        pip install arxiv-script
     - name: Test with pytest
       run: |
         pip install pytest
