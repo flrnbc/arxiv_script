@@ -4,6 +4,16 @@ version = "0.2.0"
 description = "Command line tool to handle arXiv articles and their BibTeX entries."
 authors = ["Florian Beck <flrn.beck@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/flrnbc/arxiv_script"
+repository = "https://github.com/flrnbc/arxiv_script"
+keywords = ["arxiv", "python", "click"]
+include = [
+	"LICENSE", 
+	]
+packages = [
+	{ include = 'src'},
+]
 
 [tool.poetry.dependencies]
 python = ">=3.6.1, <4" # >=3.6.1 to work with pre-commit
@@ -12,10 +22,10 @@ urllib3 = ">=1.23" # if not used, pytest gives a DeprecationWarning
 click = "^7.1.2"
 python-dotenv = "^0.17.0"
 lxml = "^4.6.3"
-pre-commit = "^2.12.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
+pre-commit = "^2.12.1"
 
 [tool.black]
 target_version = ['py36', 'py37', 'py38']
@@ -45,10 +55,13 @@ disable = "C0330, C0326"
 # C0326: Bad whitespace (because Black adds whitespace
 # around operators and brackets)
 
+[tool.poetry.scripts]
+axs = 'src:arxiv_script.cli'
+
 [build-system]
 requires = [
 	"poetry-core>=1.0.0",
-	"setuptools!=50.0", 
-	"wheel",
+	# "setuptools!=50.0", 
+	# "wheel",
 	]
 build-backend = "poetry.core.masonry.api"
