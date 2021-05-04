@@ -28,21 +28,14 @@ This yields the following BibTeX-entry:
 We are then asked if we want to automatically add this entry to our (default) .bib-file enabling us to cite the preprint in LaTeX right away.
 
 ## installation
-At this stage, the _axs_ is still under development. Hence we require Python (=>3.6) and pip for its installation. It is also recommended to install it in a virtual environment. With these requirements in place, do the follwing:
-
-- Pull this repository to your preferred directory via `git` or simply download all files.
-- In the terminal, change to the directory where you downloaded this repository to. Then create a new virtual environment, e.g. with the name `venv`, and activate it:
+The installation is most convenient using [pip](https://pip.pypa.io/en/stable/):
 ```bash
-virtualenv venv
-. venv/bin/activate
+pip install arxiv-script
 ```
-- Finally, install the _arXiv script_ via
+You can check the installation using
 ```bash
-pip install --editable .
+axs --help
 ```
-This also installs the required packages. We will soon release the _axs_ on _pypi_ making the installation easier. 
-
-**NOTE:** In the following we will run all our commands in this virtual environment.
 
 ## setup
 After installation it is recommended to set a default directory, which needs to exist already, where articles are downloaded to. This is done via
