@@ -2,6 +2,7 @@
 ![Main workflow](https://github.com/flrnbc/arxiv_script/actions/workflows/main.yml/badge.svg)
 ![codecov](https://codecov.io/gh/flrnbc/arxiv_script/branch/main/graph/badge.svg)
 ![PyPI](https://img.shields.io/pypi/v/arxiv-script)
+![GitHub](https://img.shields.io/github/license/flrnbc/arxiv_script)
 
 The [arXiv](www.arxiv.org) is the most important open-access repository for preprints in various sciences, e.g. Computer Science, Mathematics and Physics. Each preprint has its unique [arXiv identifier](https://arxiv.org/help/arxiv_identifier) (often called arXiv number). The _arXiv script_ (`axs`) is a minimal command line tool to interact with the preprint of an arXiv identifier:
 
