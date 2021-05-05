@@ -29,11 +29,15 @@ jobs:
     - name: Install package
       run: |
         pip install arxiv-script
-    - name: Test with pytest
+    - name: Test with pytest and generate reports
       run: |
         pip install pytest
-        pip install pytest-cov
-        pytest --cov=src tests/
+        pip install coverage
+        coverage run -m pytest tests/
+   - name: Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        fail_ci_if_error: true
     - name: Blacken
       run: |
         pip install black==20.8b1
@@ -50,7 +54,3 @@ jobs:
       run: |
         pip install isort
         isort --check-only --quiet .
-    - name: "Codecov"
-      uses: codecov/codecov-action@v1
-      with:
-        fail_ci_if_error: true
