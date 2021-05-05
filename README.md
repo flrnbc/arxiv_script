@@ -1,4 +1,7 @@
-# arXiv-script v0.2
+# arXiv-script v0.2.0
+
+![example workflow](https://github.com/flrnbc/arxiv_script/actions/workflows/main.yml/badge.svg)![PyPI](https://img.shields.io/pypi/v/arxiv-script)
+
 The [arXiv](www.arxiv.org) is the most important open-access repository for preprints in various sciences, e.g. Computer Science, Mathematics and Physics. Each preprint has its unique [arXiv identifier](https://arxiv.org/help/arxiv_identifier) (often called arXiv number). The _arXiv script_ (`axs`) is a minimal command line tool to interact with the preprint of an arXiv identifier:
 
 - `show` print its title, authors and abstract to the terminal.
@@ -102,3 +105,4 @@ Altogether I hope that this script is useful for others as well who prefer a min
 ## main changes from v0.1 to v0.2
 + In v0.1 the syntax was quite unconventional (`axs AX_ID CMD` instead of `axs CMD AX_ID`).
 + BUG FIX: The _axs_ now works 'anywhere' in the terminal not just in its directory. To do so, we now use use environment variables (via the dotenv package to make them last) to store the default directory and bib-file. Thanks @r-raymond! 
+
