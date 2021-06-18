@@ -20,3 +20,6 @@ venv/
 # misc
 .dir-locals.el
 axs.egg-info/
+.coveragerc
+.python-version
+dist/

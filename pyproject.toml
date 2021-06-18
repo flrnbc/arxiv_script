@@ -18,7 +18,7 @@ packages = [
 [tool.poetry.dependencies]
 python = ">=3.6.1, <4" # >=3.6.1 to work with pre-commit
 requests = "^2.25.1"
-urllib3 = ">=1.23" # if not used, pytest gives a DeprecationWarning
+urllib3 = ">=1.26.5" # if not used, pytest gives a DeprecationWarning
 click = "^7.1.2"
 python-dotenv = "^0.17.0"
 lxml = "^4.6.3"
