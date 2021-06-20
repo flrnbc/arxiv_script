@@ -44,9 +44,10 @@ def test_bib():
         cli, ["bib", "-a", "fantasy.bib", "math.GT/0309136"]
     )
     result_bib = runner.invoke(cli, ["bib", "math.GT/0309136"])
-    # to add: give a valid bib file
     assert result_false_bib.exit_code == 0
-    assert "The given path does not point to a bib-file" in result_false_bib.output
+    assert (
+        "The given path does not point to a valid bib-file" in result_false_bib.output
+    )
     assert result_bib.exit_code == 0
     assert "Here is the requested BibTeX entry:" in result_bib.output
 
@@ -60,21 +61,15 @@ def test_bib_file(tmp_path):
 
     # invoke 'axs bib'
     runner = CliRunner()
-    # without adding the bibtex key to tmp_bib (input = 'n')
-    result_tmp_bib = runner.invoke(
-        cli, ["bib", "-a", str(tmp_bib), "math.GT/0309136"], input="n"
-    )
-    # adding the to tmp_bib
+    # adding to tmp_bib
     result_tmp_write = runner.invoke(
-        cli, ["bib", "-a", str(tmp_bib), "math.GT/0309136"], input="y"
+        cli, ["bib", "-a", str(tmp_bib), "math.GT/0309136"]
     )
 
     # actual tests
-    assert result_tmp_bib.exit_code == 0
     assert result_tmp_write.exit_code == 0
     # check output
-    assert "Do you want to add this BibTeX entry" in result_tmp_bib.output
-    assert "BibTeX entry successfully added." in result_tmp_write.output
+    assert "BibTeX entry successfully added" in result_tmp_write.output
     # check if writing to tmp_bib was successful (if so, the arXiv identifier
     # is in the first line)
     with tmp_bib.open() as bib_file:
