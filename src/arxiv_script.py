@@ -6,6 +6,7 @@ functions).
 
 import os
 import subprocess
+from pathlib import Path
 
 import click
 from dotenv import find_dotenv, load_dotenv
@@ -81,26 +82,33 @@ def cli():
 )
 @click.argument("ax_id")
 def get(ax_id, open_file, directory):
-    """ Download the article corresponding to an arXiv identifier. """
+    """Download the article corresponding to an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
-    if article:
-        print('\n"{}" \nby {}\n'.format(article.title, article.authors_short))
-        # TODO: if the 'DEFAULT_DIR = ""', then 'directory' seems to be None.
-        if directory in ("", None):
-            print(
-                "Please either set a default download directory by using"
-                + "'axs --set-directory PATH'\n"
-                + "or use 'axs AX_ID get -d PATH'."
-            )
-        elif os.path.isdir(directory) is False:
-            print("Please give a valid absolute path to a directory.")
-        else:
-            # download article and show the download path
-            saved_path = os.path.abspath(article.download(save_dir=directory))
-            print("Article saved as {}.".format(saved_path))
-            if open_file:
-                opener = get_opener()
-                subprocess.call([f"{opener}", saved_path])
+    if not article:
+        return 1
+
+    print('\n"{}" \nby {}\n'.format(article.title, article.authors_short))
+    if not directory:
+        print(
+            "Please either set a default download directory by using"
+            + "'axs --set-directory PATH'\n"
+            + "or use 'axs AX_ID get -d PATH'."
+        )
+        return 1
+
+    path = Path(directory)
+    if not path.is_dir():
+        print("Please give a valid absolute path to a directory.")
+        return 1
+
+    # download article and show the download path
+    saved_path = Path(article.download(save_dir=directory)).resolve()
+    print("Article saved as {}.".format(saved_path))
+
+    if open_file:
+        opener = get_opener()
+        subprocess.call([f"{opener}", saved_path])
+    return 0
 
 
 @cli.command("show")
@@ -113,17 +121,21 @@ def get(ax_id, open_file, directory):
 )
 @click.argument("ax_id")
 def show(ax_id, full):
-    """ Show title, authors and abstract of an arXiv identifier. """
+    """Show title, authors and abstract of an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
-    if article:
-        if not full:
-            print(
-                "\nTitle:\n{} \n\nAuthor(s):\n{} \n\nAbstract:\n{}\n".format(
-                    article.title, article.authors_short, article.abstract
-                )
+    if not article:
+        return 1
+
+    if not full:
+        print(
+            "\nTitle:\n{} \n\nAuthor(s):\n{} \n\nAbstract:\n{}\n".format(
+                article.title, article.authors_short, article.abstract
             )
-        else:
-            print(article)
+        )
+        return 0
+
+    print(article)
+    return 0
 
 
 @cli.command("bib")
@@ -135,27 +147,27 @@ def show(ax_id, full):
 )
 @click.argument("ax_id")
 def bib(ax_id, add_to):
-    """ Create bibtex entry for an arXiv identifier. """
+    """Create bibtex entry for an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
-    if article:
-        bib_entry = article.bib()
-        print(f"\nHere is the requested BibTeX entry:\n\n{bib_entry}\n")
-        # TODO: again need to treat the 'None case'...
-        if add_to in ("", None):
-            print(
-                "Note: to automatically add the BibTeX entry to a bib-file"
-                + "\neither set a default bib-file via 'axs"
-                + " --set-bib-file FILE PATH'"
-                + "\nor use 'axs AX_ID bib -a FILE PATH'."
-            )
-        elif not os.path.isfile(add_to) or os.path.splitext(add_to)[1] != ".bib":
-            print("The given path does not point to a bib-file. Please try again.")
-        else:
-            if click.confirm(
-                "Do you want to add this BibTeX entry to {}?".format(
-                    os.path.abspath(add_to)
-                )
-            ):
-                with open(add_to, "a") as file:
-                    file.write("{}".format(bib_entry))
-                    print("BibTeX entry successfully added.")
+    if not article:
+        return 1
+
+    bib_entry = article.bib()
+    print(f"\nHere is the requested BibTeX entry:\n\n{bib_entry}\n")
+
+    if not add_to:
+        print(
+            "Please either set a default bib-file ('axs --set-bib-file`)"
+            + "\nor give a valid path to a bib-file."
+        )
+        return 1
+
+    path = Path(add_to)
+    if not (path.exists() and path.suffix == ".bib"):
+        print("The given path does not point to a valid bib-file. Please try again.")
+        return 1
+
+    with open(add_to, "a") as file:
+        file.write(bib_entry)
+        print(f"BibTeX entry successfully added to {path.resolve()}.")
+    return 0
