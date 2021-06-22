@@ -8,13 +8,13 @@ import time
 import requests
 
 
-# helper function(s)
 def escape_special_chars(string, special_chars):
-    """ Escape special characters via adding backslash. """
+    """Escape special characters via adding backslash."""
     escape_string = string
     for special_char in special_chars:
         # note that we need to escape the backslash
         escape_string = re.sub(special_char, "\\" + special_char, escape_string)
+
     return escape_string
 
 
@@ -23,9 +23,8 @@ def delete_prepositions(string, to_delete, case_sensitive=True):
     If case_sensitive is False, ignore if words in to_delete are
     captialized or not.
     """
-    # NOTE: it doesn't words in to_delete if they are followed e.g. by a
-    # comma. In practise, this is not a problem because preposition or articles
-    # are always surrounded by
+    # NOTE: it doesn't work for words in to_delete if they are followed
+    # e.g. by a comma. In our application, this is not a problem though.
     split_string = string.split()
     if not case_sensitive:
         to_delete_caps = [word.capitalize() for word in to_delete]
@@ -33,12 +32,13 @@ def delete_prepositions(string, to_delete, case_sensitive=True):
     for word in to_delete:
         while word in split_string:
             split_string.remove(word)
+
     return " ".join(split_string)
 
 
 def bib_title(string):
     """Helper function to create correct title for bibtex, i.e. curly braces
-    around capital words to actually print them in captial and escaping special
+    around capital words to actually print them in capital and escaping special
     characters.
     """
     caps = re.compile("[A-Z]")
@@ -51,7 +51,6 @@ def bib_title(string):
     return " ".join(split_string)
 
 
-# article class
 class Article:
     """Class for articles. All attributes are self-explanatory except for
     - authors_short: short version of the authors' names which is printed
@@ -66,7 +65,7 @@ class Article:
     """
 
     # pylint: disable=too-many-instance-attributes
-    # Eight attributes are ok here.
+    # Eight attributes are fine here.
     def __init__(
         self,
         title,
@@ -103,21 +102,21 @@ class Article:
         # more intelligent "cut-off" for title?
         contracted_title = "_".join(title_split[:15]) + "-" + self.year
         file_name = self.authors_contracted + "-" + contracted_title
-        file_path = "{}/{}.pdf".format(save_dir, file_name)
+        file_path = f"{save_dir}/{file_name}.pdf"
         # request url of pdf
-        pdf_url = "https://arxiv.org/pdf/{}.pdf".format(self.ax_id)
+        pdf_url = f"https://arxiv.org/pdf/{self.ax_id}.pdf"
         r_pdf = requests.get(pdf_url)
         # download file with delay
         t_count = 3
         while t_count:
             print(
-                "Download in {} second(s)".format(t_count)
-                + "(press Ctrl + c to cancel).",
+                f"Download in {t_count} second(s)" "(press Ctrl + c to cancel).",
                 end="\r",
             )
             time.sleep(1)
             t_count -= 1
         open(file_path, "wb").write(r_pdf.content)
+
         return file_path
 
     def bib_key(self):
@@ -127,6 +126,7 @@ class Article:
         For title: Remove commas as well as all common propositions and
         articles (i.e. 'on', 'in', 'a', 'the', ...); then take the first
         three words.
+        The arXiv identifier is added at the end to guarantee uniqueness.
         """
         # key for authors
         authors_key = self.authors_contracted
@@ -134,13 +134,12 @@ class Article:
         # remove most common propositions and articles
         to_remove = ["a", "and", "in", "of", "on", "or", "the", "for"]
         title_key = delete_prepositions(self.title, to_remove, case_sensitive=False)
-        # print(title_key)
         # remove characters which are not allowed/unnecessary in bibtex key
         remove_chars = re.compile(r'[\\{},~#%:"]')
         title_key = re.sub(remove_chars, "", title_key)
         title_key_split = title_key.split()
         title_key = "".join(t.capitalize() for t in title_key_split[:3])
-        # TODO: add arxiv identifier only to make key unique; better way?
+
         return authors_key + "-" + title_key + "-" + self.ax_id
 
     def bib(self):
@@ -148,11 +147,12 @@ class Article:
         bib_key and bib_tile.
         """
         article_key = self.bib_key()
-        url = "https://arxiv.org/abs/{}".format(self.ax_id)
+        url = f"https://arxiv.org/abs/{self.ax_id}"
         title = bib_title(self.title)
         bib_entry = (
-            "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},"
-            "\n\tYear = {{{3}}},"
-            "\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}"
-        ).format(article_key, self.authors, title, self.year, url, self.ax_id)
+            f"@article{{{article_key},\n\tAuthor = {{{self.authors}}},"
+            f"\n\tTitle = {{{title}}},"
+            f"\n\tYear = {{{self.year}}},"
+            f"\n\tNote = {{\\href{{{url}}}{{arXiv:{5}}}}}\n}}"
+        )
         return bib_entry
