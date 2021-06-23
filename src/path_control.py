@@ -28,21 +28,23 @@ def set_default(path, path_type):
     """
     if not check_path(path=path, path_type=path_type):
         print("Not a correct path. Please try again.")
+        return 1
     else:
         # load .env-file for environment variables
         dotenv_file = find_dotenv()
         load_dotenv(dotenv_file)
         # set the environment variable (in current session)
+        # note: set_key writes to the dot-file but the env var
+        # is only available in the next session
         if path_type == "dir":
-            env_var = "DEFAULT_DIRECTORY"
+            os.environ["DEFAULT_DIRECTORY"] = path
+            set_key(dotenv_file, "DEFAULT_DIRECTORY", path)
         elif path_type == "bib":
-            env_var = "DEFAULT_BIB_FILE"
-        os.environ[env_var] = path
+            os.environ["DEFAULT_BIB_FILE"] = path
+            set_key(dotenv_file, "DEFAULT_BIB_FILE", path)
         # set it in the dot-file (performed only after the session)
-        set_key(dotenv_file, env_var, path)
-        # for better printing
-        env_var_print = env_var.replace("_", " ")
-        print(f"New {env_var_print.lower()} has been set.")
+        print("New default has been set.")
+        return 0
 
 
 def get_opener():

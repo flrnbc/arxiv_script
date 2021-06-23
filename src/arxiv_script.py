@@ -126,7 +126,7 @@ def show(ax_id, full):
         print(
             f"\nTitle:\n{article.title}\n\n"
             f"Author(s):\n{article.authors_short}\n\n"
-            f"Abstract:\n{article.abstdact}\n"
+            f"Abstract:\n{article.abstract}\n"
         )
         return 0
 

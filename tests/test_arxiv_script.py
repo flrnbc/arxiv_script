@@ -34,7 +34,7 @@ def test_get():
     assert result.exit_code == 0
     assert result_false_dir.exit_code == 0
     assert "Not a correct arXiv identifier." in result.output
-    assert "Please give a valid absolute path" in result_false_dir.output
+    assert "Please give a valid (absolute) path" in result_false_dir.output
 
 
 def test_bib():
