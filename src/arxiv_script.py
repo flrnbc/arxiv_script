@@ -6,13 +6,12 @@ functions).
 
 import os
 import subprocess
-from pathlib import Path
 
 import click
 from dotenv import find_dotenv, load_dotenv
 
 import src.retrieve as retrieve
-from src.path_control import get_opener, set_default
+from src.path_control import check_path, get_opener, set_default
 
 # load environment variables from local .env-file
 # also used for help to show the default directory/bib file.
@@ -29,7 +28,7 @@ def set_download_dir(ctx, param, directory):
     # are passed to this function
     if not directory or ctx.resilient_parsing:
         return
-    set_default(path=directory, path_type="DEFAULT_DIRECTORY")
+    set_default(path=directory, path_type="dir")
     ctx.exit()
 
 
@@ -38,7 +37,7 @@ def set_bib(ctx, param, bib_file):
     Again, param is not used here but required by Click."""
     if not bib_file or ctx.resilient_parsing:
         return
-    set_default(path=bib_file, path_type="DEFAULT_BIB_FILE")
+    set_default(path=bib_file, path_type="bib")
     ctx.exit()
 
 
@@ -87,7 +86,7 @@ def get(ax_id, open_file, directory):
     if not article:
         return 1
 
-    print('\n"{}" \nby {}\n'.format(article.title, article.authors_short))
+    print(f'\n"{article.title}" \nby {article.authors_short}\n')
     if not directory:
         print(
             "Please either set a default download directory by using"
@@ -96,15 +95,12 @@ def get(ax_id, open_file, directory):
         )
         return 1
 
-    path = Path(directory)
-    if not path.is_dir():
-        print("Please give a valid absolute path to a directory.")
+    if not check_path(directory, "dir"):
+        print("Please give a valid (absolute) path to a directory.")
         return 1
 
-    # download article and show the download path
-    saved_path = Path(article.download(save_dir=directory)).resolve()
-    print("Article saved as {}.".format(saved_path))
-
+    saved_path = article.download(save_dir=directory)
+    print(f"Article saved as {saved_path}.")
     if open_file:
         opener = get_opener()
         subprocess.call([f"{opener}", saved_path])
@@ -128,9 +124,9 @@ def show(ax_id, full):
 
     if not full:
         print(
-            "\nTitle:\n{} \n\nAuthor(s):\n{} \n\nAbstract:\n{}\n".format(
-                article.title, article.authors_short, article.abstract
-            )
+            f"\nTitle:\n{article.title}\n\n"
+            f"Author(s):\n{article.authors_short}\n\n"
+            f"Abstract:\n{article.abstdact}\n"
         )
         return 0
 
@@ -162,12 +158,11 @@ def bib(ax_id, add_to):
         )
         return 1
 
-    path = Path(add_to)
-    if not (path.exists() and path.suffix == ".bib"):
+    if not check_path(add_to, "bib"):
         print("The given path does not point to a valid bib-file. Please try again.")
         return 1
 
     with open(add_to, "a") as file:
         file.write(bib_entry)
-        print(f"BibTeX entry successfully added to {path.resolve()}.")
+        print(f"BibTeX entry successfully added to {add_to}.")
     return 0

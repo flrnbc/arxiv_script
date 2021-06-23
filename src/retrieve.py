@@ -33,13 +33,13 @@ def arxiv(ax_id):
     or None if arXiv identifier does not exist.
     """
     # python 3 truncates leading zeros but these might occur
-    # in arxiv identifiers. TODO: check!
+    # in arxiv identifiers.
     if not check(ax_id):
         print("Not a correct arXiv identifier. Please try again.")
         return None
     ax_id = str(ax_id).zfill(9)
     article_year = get_year(ax_id)
-    abs_url = "https://arxiv.org/abs/{}".format(ax_id)
+    abs_url = f"https://arxiv.org/abs/{ax_id}"
     src_abs = requests.get(abs_url)
 
     # obtain a _structured_ document ("tree") of source of abs_url
@@ -88,7 +88,7 @@ def arxiv(ax_id):
 
 def check(ax_id):
     """"Helper function to check if arXiv identifier exists."""
-    abs_url = "https://arxiv.org/abs/{}".format(ax_id)
+    abs_url = f"https://arxiv.org/abs/{ax_id}"
     req = requests.get(abs_url)
     # check status of request
     return req.status_code == requests.codes.ok

@@ -4,6 +4,7 @@ its basic functionality (e.g. download and bibtex-entry).
 
 import re
 import time
+from pathlib import Path
 
 import requests
 
@@ -45,9 +46,8 @@ def bib_title(string):
     special = [r'"', r"{", r"}"]
     split_string = string.split()
     split_string = [escape_special_chars(w, special) for w in split_string]
-    split_string = [
-        "{{{}}}".format(w) if re.search(caps, w) else w for w in split_string
-    ]
+    split_string = [f"{{{w}}}" if re.search(caps, w) else w for w in split_string]
+
     return " ".join(split_string)
 
 
@@ -96,7 +96,10 @@ class Article:
         )
 
     def download(self, save_dir):
-        """Download article to save_dir."""
+        """Download article to save_dir.
+        Return the absolute path (object) of
+        saved file.
+        """
         # create convenient file name
         title_split = self.title.split()
         # more intelligent "cut-off" for title?
@@ -115,9 +118,11 @@ class Article:
             )
             time.sleep(1)
             t_count -= 1
+        # write to file
         open(file_path, "wb").write(r_pdf.content)
 
-        return file_path
+        # return the absolute file path (object)
+        return Path(file_path).resolve()
 
     def bib_key(self):
         """Create a convenient bibtex entry.
@@ -153,6 +158,6 @@ class Article:
             f"@article{{{article_key},\n\tAuthor = {{{self.authors}}},"
             f"\n\tTitle = {{{title}}},"
             f"\n\tYear = {{{self.year}}},"
-            f"\n\tNote = {{\\href{{{url}}}{{arXiv:{5}}}}}\n}}"
+            f"\n\tNote = {{\\href{{{url}}}{{arXiv:{self.ax_id}}}}}\n}}"
         )
         return bib_entry
