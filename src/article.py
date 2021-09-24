@@ -109,7 +109,7 @@ class Article:
         # more intelligent "cut-off" for title?
         contracted_title = "_".join(title_split[:15]) + "-" + self.year
         file_name = self.authors_contracted + "-" + contracted_title
-        file_path = f"{save_dir}/{file_name}.pdf"
+        file_path = Path(f"{save_dir}/{file_name}.pdf")
         # request url of pdf
         pdf_url = f"https://arxiv.org/pdf/{self.ax_id}.pdf"
         r_pdf = requests.get(pdf_url)
@@ -126,7 +126,7 @@ class Article:
         open(file_path, "wb").write(r_pdf.content)
 
         # return the absolute file path (object)
-        return Path(file_path).resolve()
+        return file_path.resolve()
 
     def bib_key(self):
         """Create a convenient bibtex entry.
