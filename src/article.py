@@ -39,13 +39,17 @@ def delete_prepositions(string, to_delete, case_sensitive=True):
 
 def bib_title(string):
     """Helper function to create correct title for bibtex, i.e. curly braces
-    around capital words to actually print them in capital and escaping special
-    characters.
+    around words which contain capital letters (to actually print them capital
+    in the compiled TeX-file) and escaping special characters.
+    Example:
+    "$N=2$ supersymmetry" -> "{$N=2$} supersymmetry"
+    (this example shows that isupper() does not suffice)
     """
     caps = re.compile("[A-Z]")
-    special = [r'"', r"{", r"}"]
+    special_chars = [r'"', r"{", r"}"]
     split_string = string.split()
-    split_string = [escape_special_chars(w, special) for w in split_string]
+    split_string = [escape_special_chars(w, special_chars) for w in split_string]
+    # Curly braces around words containing capital letters
     split_string = [f"{{{w}}}" if re.search(caps, w) else w for w in split_string]
 
     return " ".join(split_string)
