@@ -84,27 +84,25 @@ def get(ax_id, open_file, directory):
     """Download the article corresponding to an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
     if not article:
-        return 1
+        raise click.ClickException("Not a valid arXiv identifier.")
 
     print(f'\n"{article.title}" \nby {article.authors_short}\n')
     if not directory:
-        print(
-            "Please either set a default download directory by using"
-            + "'axs --set-directory PATH'\n"
-            + "or use 'axs AX_ID get -d PATH'."
+        raise click.ClickException(
+            "Please either set a default download"
+            + "directory or use 'axs AX_ID get -d PATH'."
         )
-        return 1
 
     if not check_path(directory, "dir"):
-        print("Please give a valid (absolute) path to a directory.")
-        return 1
+        raise click.ClickException(
+            "Please give a valid (absolute) path to" + "a directory."
+        )
 
     saved_path = article.download(save_dir=directory)
     print(f"Article saved as {saved_path}.")
     if open_file:
         opener = get_opener()
         subprocess.call([f"{opener}", saved_path])
-    return 0
 
 
 @cli.command("show")
@@ -120,7 +118,7 @@ def show(ax_id, full):
     """Show title, authors and abstract of an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
     if not article:
-        return 1
+        raise click.ClickException("Not a valid arXiv identifier.")
 
     if not full:
         print(
@@ -128,10 +126,7 @@ def show(ax_id, full):
             f"Author(s):\n{article.authors_short}\n\n"
             f"Abstract:\n{article.abstract}\n"
         )
-        return 0
-
     print(article)
-    return 0
 
 
 @cli.command("bib")
@@ -146,23 +141,22 @@ def bib(ax_id, add_to):
     """Create bibtex entry for an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
     if not article:
-        return 1
+        raise click.ClickException("Not a valid arXiv identifier.")
 
     bib_entry = article.bib()
     print(f"\nHere is the requested BibTeX entry:\n\n{bib_entry}\n")
 
     if not add_to:
-        print(
+        raise click.ClickException(
             "Please either set a default bib-file ('axs --set-bib-file`)"
             + "\nor give a valid path to a bib-file."
         )
-        return 1
 
     if not check_path(add_to, "bib"):
-        print("The given path does not point to a valid bib-file. Please try again.")
-        return 1
+        raise click.ClickException(
+            "The given path does not point to a valid bib-file." + "Please try again."
+        )
 
     with open(add_to, "a") as file:
         file.write(bib_entry)
         print(f"BibTeX entry successfully added to {add_to}.")
-    return 0

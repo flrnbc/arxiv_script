@@ -19,7 +19,7 @@ def check_path(path, path_type):
         return path_obj.is_dir()
     if path_type == "bib":
         return path_obj.exists() and path_obj.suffix == ".bib"
-    return 1
+    raise FileNotFoundError
 
 
 def set_default(path, path_type):
@@ -27,8 +27,7 @@ def set_default(path, path_type):
     or default bib file (path_type = 'bib').
     """
     if not check_path(path=path, path_type=path_type):
-        print("Not a correct path. Please try again.")
-        return 1
+        raise FileNotFoundError
     else:
         # load .env-file for environment variables
         dotenv_file = find_dotenv()
@@ -44,7 +43,6 @@ def set_default(path, path_type):
             set_key(dotenv_file, "DEFAULT_BIB_FILE", path)
         # set it in the dot-file (performed only after the session)
         print("New default has been set.")
-        return 0
 
 
 def get_opener():
