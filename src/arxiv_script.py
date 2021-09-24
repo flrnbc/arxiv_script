@@ -94,9 +94,9 @@ def get(ax_id, open_file, directory):
         )
 
     if not check_path(directory, "dir"):
-        raise click.ClickException(
-            "Please give a valid (absolute) path to" + "a directory."
-        )
+        raise click.FileError(directory)
+        # "Please give a valid (absolute) path to" + "a directory."
+        # )
 
     saved_path = article.download(save_dir=directory)
     print(f"Article saved as {saved_path}.")
@@ -153,9 +153,8 @@ def bib(ax_id, add_to):
         )
 
     if not check_path(add_to, "bib"):
-        raise click.ClickException(
-            "The given path does not point to a valid bib-file." + "Please try again."
-        )
+        raise click.FileError(add_to)
+        # "The given path does not point to a valid bib-file." + "Please try again."
 
     with open(add_to, "a") as file:
         file.write(bib_entry)
