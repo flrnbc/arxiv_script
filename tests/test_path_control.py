@@ -2,6 +2,7 @@
 
 import os
 
+import pytest
 from dotenv import load_dotenv, set_key
 
 from src.path_control import check_path, get_opener, set_default
@@ -37,14 +38,16 @@ def test_set_default():
     assert os.getenv("DEFAULT_DIRECTORY") == test_dir
 
     # see if it rejects invalid directory paths
-    set_default("/not/a/valid/path", "dir")
+    with pytest.raises(FileNotFoundError):
+        set_default("/not/a/valid/path", "dir")
     assert os.getenv("DEFAULT_DIRECTORY") == test_dir
 
     # change DEFAULT_BIB_FILE temporarily
     set_default(test_bib, "bib")
     assert os.getenv("DEFAULT_BIB_FILE") == test_bib
 
-    set_default("/not/a/valid/bib_file", "bib")
+    with pytest.raises(FileNotFoundError):
+        set_default("/not/a/valid/bib_file", "bib")
     assert os.getenv("DEFAULT_BIB_FILE") == test_bib
 
     # reset .env-file (for next session)
