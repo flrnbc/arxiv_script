@@ -1,45 +1,48 @@
-"""
-Helper function to check if path exists
+"""Helper function to check if path exists
 as directory or file. Another helper function
 for opening a downloaded file.
 """
 
 import os
 import platform
+from pathlib import Path
 
 from dotenv import find_dotenv, load_dotenv, set_key
 
 
 def check_path(path, path_type):
-    """Check if path is a directory (path_type = DEFAULT_DIRECTORY)
-    or bib-file (path_type = DEFAULT_BIB_FILE).
-    Note: the path_type is later on passed to other functions.
-    That's we use these names.
+    """Check if path is a directory (path_type = 'dir')
+    or bib-file (path_type = 'bib).
     """
-    if path_type == "DEFAULT_DIRECTORY":
-        return os.path.isdir(path)
-    if path_type == "DEFAULT_BIB_FILE":
-        return os.path.isfile(path) and os.path.splitext(path)[1] == ".bib"
+    path_obj = Path(path)
+    if path_type == "dir":
+        return path_obj.is_dir()
+    if path_type == "bib":
+        return path_obj.exists() and path_obj.suffix == ".bib"
+    raise FileNotFoundError
 
 
 def set_default(path, path_type):
-    """Set default directory (path_type = 'DEFAULT_DIRECTORY')
-    or default bib file (path_type = 'DEFAULT_BIB_FILE').
+    """Set default directory (path_type = 'dir')
+    or default bib file (path_type = 'bib').
     """
     if not check_path(path=path, path_type=path_type):
-        print("Not a correct path. Please try again.")
+        raise FileNotFoundError
     else:
         # load .env-file for environment variables
         dotenv_file = find_dotenv()
         load_dotenv(dotenv_file)
-        # set the environment variable (= path_type) (in current session)
-        os.environ[path_type] = path
+        # set the environment variable (in current session)
+        # note: set_key writes to the dot-file but the env var
+        # is only available in the next session
+        if path_type == "dir":
+            os.environ["DEFAULT_DIRECTORY"] = path
+            set_key(dotenv_file, "DEFAULT_DIRECTORY", path)
+        elif path_type == "bib":
+            os.environ["DEFAULT_BIB_FILE"] = path
+            set_key(dotenv_file, "DEFAULT_BIB_FILE", path)
         # set it in the dot-file (performed only after the session)
-        set_key(dotenv_file, path_type, path)
-        # for better printing
-        env_var_print = path_type.replace("_", " ")
-
-        print("New {} has been set.".format(env_var_print.lower()))
+        print("New default has been set.")
 
 
 def get_opener():

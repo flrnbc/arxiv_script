@@ -6,6 +6,12 @@ import src.article as sa
 from src.retrieve import arxiv, get_year
 
 
+def test_abstract_article():
+    primitve_article = sa.PrimitiveArticle("everyone rules", "jon")
+    assert primitve_article.title == "everyone rules"
+    assert primitve_article.authors == "jon"
+
+
 def test_escape_special_chars():
     chars = [r'"', r"{"]
     test_string = '{here we go "'
@@ -69,12 +75,13 @@ def test_article_class():
     assert sa.bib_title(title) == "{New} article"
     bib_title = sa.bib_title(title)
 
-    url = "https://arxiv.org/abs/{}".format(ax_id)
+    url = f"https://arxiv.org/abs/{ax_id}"
     bib_entry = (
-        "@article{{{0},\n\tAuthor = {{{1}}},\n\tTitle = {{{2}}},"
-        "\n\tYear = {{{3}}},"
-        "\n\tNote = {{\\href{{{4}}}{{arXiv:{5}}}}}\n}}"
-    ).format(bib_key, authors, bib_title, year, url, ax_id)
+        f"@article{{{bib_key},\n\tAuthor = {{{authors}}},"
+        f"\n\tTitle = {{{bib_title}}},"
+        f"\n\tYear = {{{year}}},"
+        f"\n\tNote = {{\\href{{{url}}}{{arXiv:{ax_id}}}}}\n}}"
+    )
 
     assert test_class.bib() == bib_entry
 

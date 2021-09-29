@@ -21,20 +21,16 @@ def test_settings():
     runner = CliRunner()
     result_dir = runner.invoke(cli, ["--set-directory", "a/fantasy/path/dir"])
     result_bib = runner.invoke(cli, ["--set-bib-file", "a/fantasy/bib/file"])
-    assert result_dir.exit_code == 0
-    assert result_bib.exit_code == 0
-    assert "Not a correct path" in result_dir.output
-    assert "Not a correct path" in result_bib.output
+    assert result_dir.exit_code == 1
+    assert result_bib.exit_code == 1
 
 
 def test_get():
     runner = CliRunner()
     result = runner.invoke(cli, ["get", "fantasy/ax_id"])
     result_false_dir = runner.invoke(cli, ["get", "-d", "fantasy/dir/", "2011.02123"])
-    assert result.exit_code == 0
-    assert result_false_dir.exit_code == 0
-    assert "Not a correct arXiv identifier." in result.output
-    assert "Please give a valid absolute path" in result_false_dir.output
+    assert result.exit_code == 1
+    assert result_false_dir.exit_code == 1
 
 
 def test_bib():
@@ -44,10 +40,7 @@ def test_bib():
         cli, ["bib", "-a", "fantasy.bib", "math.GT/0309136"]
     )
     result_bib = runner.invoke(cli, ["bib", "math.GT/0309136"])
-    # to add: give a valid bib file
-    assert result_false_bib.exit_code == 0
-    assert "The given path does not point to a bib-file" in result_false_bib.output
-    assert result_bib.exit_code == 0
+    assert result_false_bib.exit_code == 1
     assert "Here is the requested BibTeX entry:" in result_bib.output
 
 
@@ -60,21 +53,15 @@ def test_bib_file(tmp_path):
 
     # invoke 'axs bib'
     runner = CliRunner()
-    # without adding the bibtex key to tmp_bib (input = 'n')
-    result_tmp_bib = runner.invoke(
-        cli, ["bib", "-a", str(tmp_bib), "math.GT/0309136"], input="n"
-    )
-    # adding the to tmp_bib
+    # adding to tmp_bib
     result_tmp_write = runner.invoke(
-        cli, ["bib", "-a", str(tmp_bib), "math.GT/0309136"], input="y"
+        cli, ["bib", "-a", str(tmp_bib), "math.GT/0309136"]
     )
 
     # actual tests
-    assert result_tmp_bib.exit_code == 0
     assert result_tmp_write.exit_code == 0
     # check output
-    assert "Do you want to add this BibTeX entry" in result_tmp_bib.output
-    assert "BibTeX entry successfully added." in result_tmp_write.output
+    assert "BibTeX entry successfully added" in result_tmp_write.output
     # check if writing to tmp_bib was successful (if so, the arXiv identifier
     # is in the first line)
     with tmp_bib.open() as bib_file:

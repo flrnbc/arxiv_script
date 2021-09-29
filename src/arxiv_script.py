@@ -11,7 +11,7 @@ import click
 from dotenv import find_dotenv, load_dotenv
 
 import src.retrieve as retrieve
-from src.path_control import get_opener, set_default
+from src.path_control import check_path, get_opener, set_default
 
 # load environment variables from local .env-file
 # also used for help to show the default directory/bib file.
@@ -28,7 +28,7 @@ def set_download_dir(ctx, param, directory):
     # are passed to this function
     if not directory or ctx.resilient_parsing:
         return
-    set_default(path=directory, path_type="DEFAULT_DIRECTORY")
+    set_default(path=directory, path_type="dir")
     ctx.exit()
 
 
@@ -37,7 +37,7 @@ def set_bib(ctx, param, bib_file):
     Again, param is not used here but required by Click."""
     if not bib_file or ctx.resilient_parsing:
         return
-    set_default(path=bib_file, path_type="DEFAULT_BIB_FILE")
+    set_default(path=bib_file, path_type="bib")
     ctx.exit()
 
 
@@ -81,26 +81,28 @@ def cli():
 )
 @click.argument("ax_id")
 def get(ax_id, open_file, directory):
-    """ Download the article corresponding to an arXiv identifier. """
+    """Download the article corresponding to an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
-    if article:
-        print('\n"{}" \nby {}\n'.format(article.title, article.authors_short))
-        # TODO: if the 'DEFAULT_DIR = ""', then 'directory' seems to be None.
-        if directory in ("", None):
-            print(
-                "Please either set a default download directory by using"
-                + "'axs --set-directory PATH'\n"
-                + "or use 'axs AX_ID get -d PATH'."
-            )
-        elif os.path.isdir(directory) is False:
-            print("Please give a valid absolute path to a directory.")
-        else:
-            # download article and show the download path
-            saved_path = os.path.abspath(article.download(save_dir=directory))
-            print("Article saved as {}.".format(saved_path))
-            if open_file:
-                opener = get_opener()
-                subprocess.call([f"{opener}", saved_path])
+    if not article:
+        raise click.ClickException("Not a valid arXiv identifier.")
+
+    print(f'\n"{article.title}" \nby {article.authors_short}\n')
+    if not directory:
+        raise click.ClickException(
+            "Please either set a default download"
+            + "directory or use 'axs AX_ID get -d PATH'."
+        )
+
+    if not check_path(directory, "dir"):
+        raise click.FileError(directory)
+        # "Please give a valid (absolute) path to" + "a directory."
+        # )
+
+    saved_path = article.download(save_dir=directory)
+    print(f"Article saved as {saved_path}.")
+    if open_file:
+        opener = get_opener()
+        subprocess.call([f"{opener}", saved_path])
 
 
 @cli.command("show")
@@ -113,17 +115,18 @@ def get(ax_id, open_file, directory):
 )
 @click.argument("ax_id")
 def show(ax_id, full):
-    """ Show title, authors and abstract of an arXiv identifier. """
+    """Show title, authors and abstract of an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
-    if article:
-        if not full:
-            print(
-                "\nTitle:\n{} \n\nAuthor(s):\n{} \n\nAbstract:\n{}\n".format(
-                    article.title, article.authors_short, article.abstract
-                )
-            )
-        else:
-            print(article)
+    if not article:
+        raise click.ClickException("Not a valid arXiv identifier.")
+
+    if not full:
+        print(
+            f"\nTitle:\n{article.title}\n\n"
+            f"Author(s):\n{article.authors_short}\n\n"
+            f"Abstract:\n{article.abstract}\n"
+        )
+    print(article)
 
 
 @cli.command("bib")
@@ -135,27 +138,24 @@ def show(ax_id, full):
 )
 @click.argument("ax_id")
 def bib(ax_id, add_to):
-    """ Create bibtex entry for an arXiv identifier. """
+    """Create bibtex entry for an arXiv identifier."""
     article = retrieve.arxiv(ax_id)
-    if article:
-        bib_entry = article.bib()
-        print(f"\nHere is the requested BibTeX entry:\n\n{bib_entry}\n")
-        # TODO: again need to treat the 'None case'...
-        if add_to in ("", None):
-            print(
-                "Note: to automatically add the BibTeX entry to a bib-file"
-                + "\neither set a default bib-file via 'axs"
-                + " --set-bib-file FILE PATH'"
-                + "\nor use 'axs AX_ID bib -a FILE PATH'."
-            )
-        elif not os.path.isfile(add_to) or os.path.splitext(add_to)[1] != ".bib":
-            print("The given path does not point to a bib-file. Please try again.")
-        else:
-            if click.confirm(
-                "Do you want to add this BibTeX entry to {}?".format(
-                    os.path.abspath(add_to)
-                )
-            ):
-                with open(add_to, "a") as file:
-                    file.write("{}".format(bib_entry))
-                    print("BibTeX entry successfully added.")
+    if not article:
+        raise click.ClickException("Not a valid arXiv identifier.")
+
+    bib_entry = article.bib()
+    print(f"\nHere is the requested BibTeX entry:\n\n{bib_entry}\n")
+
+    if not add_to:
+        raise click.ClickException(
+            "Please either set a default bib-file ('axs --set-bib-file`)"
+            + "\nor give a valid path to a bib-file."
+        )
+
+    if not check_path(add_to, "bib"):
+        raise click.FileError(add_to)
+        # "The given path does not point to a valid bib-file." + "Please try again."
+
+    with open(add_to, "a") as file:
+        file.write(bib_entry)
+        print(f"BibTeX entry successfully added to {add_to}.")
