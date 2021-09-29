@@ -55,55 +55,29 @@ def bib_title(string):
     return " ".join(split_string)
 
 
-# class Article(ABC):
-#    def __init__(self, title: str, authors: str):
-#        self.title = title
-#        self.authors = authors
-
-
 class Article:
-    """Class for articles. All attributes are self-explanatory except for
-    - authors_short: short version of the authors' names which is printed
-      before a download Formate (as created via retrieve.py):
-      2 authors: A and B.
-      3 authors: A, B and C.
-      > 3 authors: A et al.
-    - authors_contracted: essentially remove 'and' as well as all space in
-      authors_short; used for file name and bibtex key.
-    - ax_id: short for arxiv identifier.
-    - main_subject: main arxiv subject.
+    """Article class instantiated from kwargs article_data containing
+    the corresponding properties of an article.
+    Note that we require a 'title' and 'authors' in article_data
+    as the bare minimum.
+
+    TODO: we do not (yet) give type hints (e.g. using pydantic).
     """
 
-    # pylint: disable=too-many-instance-attributes
-    # Eight attributes are fine here.
-    def __init__(
-        self,
-        title,
-        authors,
-        authors_short,
-        authors_contracted,
-        abstract,
-        ax_id,
-        year,
-        main_subject,
-    ):
-        self.title = title
-        self.authors = authors
-        self.authors_short = authors_short
-        self.authors_contracted = authors_contracted
-        self.abstract = abstract
-        self.ax_id = ax_id
-        self.year = year
-        self.main_subject = main_subject
+    def __init__(self, **article_data):
+        try:
+            article_data["title"]
+            article_data["authors"]
+            for key, value in article_data.items():
+                setattr(self, key, value)
+        except KeyError:
+            print("wrong")
 
     def __str__(self):
-        return (
-            f"\nTitle:\n{self.title} \n\nAuthors:\n{self.authors}"
-            f"\n\nAbstract:\n{self.abstract}"
-            f"\n\narXiv identifier:\n{self.ax_id}"
-            f"\n\nYear: \n{self.year}"
-            f"\n\nMain subject: \n{self.main_subject}\n"
-        )
+        article_str = ""
+        for key, value in vars(self).items():
+            article_str += f"{key.title()}:\n {value}\n\n"
+        return article_str
 
     def download(self, save_dir):
         """Download article to save_dir.

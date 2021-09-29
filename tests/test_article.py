@@ -6,6 +6,12 @@ import src.article as sa
 from src.retrieve import arxiv, get_year
 
 
+def test_abstract_article():
+    primitve_article = sa.PrimitiveArticle("everyone rules", "jon")
+    assert primitve_article.title == "everyone rules"
+    assert primitve_article.authors == "jon"
+
+
 def test_escape_special_chars():
     chars = [r'"', r"{"]
     test_string = '{here we go "'

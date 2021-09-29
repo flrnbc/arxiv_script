@@ -15,7 +15,7 @@ class ParserInterface(ABC):
 
     @abstractmethod
     def parse(self, data):
-        return
+        pass
 
 
 class ContractTitle(ParserInterface):
