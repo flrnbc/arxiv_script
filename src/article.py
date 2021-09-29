@@ -55,6 +55,12 @@ def bib_title(string):
     return " ".join(split_string)
 
 
+# class Article(ABC):
+#    def __init__(self, title: str, authors: str):
+#        self.title = title
+#        self.authors = authors
+
+
 class Article:
     """Class for articles. All attributes are self-explanatory except for
     - authors_short: short version of the authors' names which is printed
